@@ -9,6 +9,7 @@ class App extends React.Component {
     const horde = 'guild-name -horde'
     return(
       <div>
+        <Navbar />
         <Guilds faction={alliance} />
         <Guilds faction={horde} />
         <Guilds faction={alliance} />
