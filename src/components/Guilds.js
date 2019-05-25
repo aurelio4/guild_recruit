@@ -5,10 +5,10 @@ class Guilds extends React.Component {
   render() {
     return (
       <div className="guild-box">
-        <h1 className={this.props.faction}>24 max length guild name</h1>
-        <span className="server-name"> US-Sargeras </span>
+        <a className={this.props.faction} href="#">{this.props.guildname}</a>
+        <span className="server-name"> {this.props.server} </span>
         <hr className="hr-divider" />
-        <p className="guild-desc"> This is some sample text about our guild that we are advertising for our raiding team. Please contact us to join us. </p>
+        <p className="guild-desc">{this.props.desc}</p>
       </div>
     )
   }

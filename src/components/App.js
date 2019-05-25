@@ -10,9 +10,9 @@ class App extends React.Component {
     return(
       <div>
         <Navbar />
-        <Guilds faction={alliance} />
-        <Guilds faction={horde} />
-        <Guilds faction={alliance} />
+        <Guilds guildname="HelloQ" faction={alliance} server="US-Sargeras" desc="This is some sample text about our guild that we are advertising for our raiding team. Please contact us to join us" />
+        <Guilds guildname="World" faction={alliance} server="US-Sargeras" desc="This is some sample text about our guild that we are advertising for our raiding team. Please contact us to join us" />
+        <Guilds guildname="Method" faction={horde} server="EU-Tauren Mill" desc="This is some sample text about our guild that we are advertising for our raiding team. Please contact us to join us" />
       </div>
     )
   }
