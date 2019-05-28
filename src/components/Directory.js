@@ -9,7 +9,15 @@ import {
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
-  DropdownItem } from 'reactstrap';
+  DropdownItem,
+  Button,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  Label,
+  Input,
+  FormGroup,
+  Form } from 'reactstrap';
 
 class Directory extends React.Component {
   constructor(props) {
@@ -21,7 +29,7 @@ class Directory extends React.Component {
     this.state = {
       isOpen: false,
       modal: false,
-      isLoggedIn: true
+      isLoggedIn: false
     }
   }
 
@@ -41,6 +49,7 @@ class Directory extends React.Component {
     this.setState(prevState => ({
       isLoggedIn: !prevState.isLoggedIn
     }))
+    console.log(this.state.isLoggedIn)
   }
 
   render() {
@@ -49,7 +58,7 @@ class Directory extends React.Component {
         <NavbarToggler onClick={this.toggleNav} />
         <Collapse isOpen={this.state.isOpen} navbar>
           <Nav className="ml-auto" navbar>
-        {this.state.isLoggedIn
+          {this.state.isLoggedIn
         ?   <UncontrolledDropdown nav inNavbar>
               <DropdownToggle nav caret>
                 Options
@@ -57,6 +66,7 @@ class Directory extends React.Component {
               <DropdownMenu right>
                 <DropdownItem> Option 1 </DropdownItem>
                 <DropdownItem> Option 2 </DropdownItem>
+                <DropdownItem> Option 3 </DropdownItem>
                 <DropdownItem divider />
                 <DropdownItem onClick={this.handleLogin}>
                   Log Out
@@ -64,7 +74,23 @@ class Directory extends React.Component {
               </DropdownMenu>
             </UncontrolledDropdown>
         :   <NavItem>
-              <NavLink href="#" onClick={this.handleLogin}>Login</NavLink>
+              <NavLink href="#" onClick={this.toggleModal}>Login</NavLink>
+              <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
+                <ModalBody>
+                  <Form>
+                    <FormGroup>
+                      <Input type="username" name="username" placeholder="Username" />
+                    </FormGroup>
+                    <FormGroup>
+                      <Input type="password" name="password" placeholder="Password" />
+                    </FormGroup>
+                  </Form>
+                  <Button color="secondary" onClick={() => {
+                    this.handleLogin();
+                    this.toggleModal();
+                  }}> Log in </Button>
+                </ModalBody>
+              </Modal>
             </NavItem>
         }
           </Nav>
