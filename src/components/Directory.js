@@ -73,7 +73,10 @@ class Directory extends React.Component {
                 </DropdownItem>
               </DropdownMenu>
             </UncontrolledDropdown>
-        :   <NavItem>
+        :  [<NavItem>
+              <NavLink href="#" onClick={this.handleLogin}>Register</NavLink>
+            </NavItem>,
+            <NavItem>
               <NavLink href="#" onClick={this.toggleModal}>Login</NavLink>
               <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
                 <ModalBody>
@@ -91,8 +94,7 @@ class Directory extends React.Component {
                   }}> Log in </Button>
                 </ModalBody>
               </Modal>
-            </NavItem>
-        }
+            </NavItem> ]}
           </Nav>
         </Collapse>
       </Navbar>
