@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Rubik&display=swap');
+
+.main-div {
+  max-width: 95% !important;
+  margin: auto !important;
+}
+
+.-alliance {
+  color: #144587 !important;
+}
+
+.-horde {
+  color: #8C1616 !important;
+}
+
+.the-boxes {
+  margin-top: 1vw;
+}
+
+.guild-box {
+  font-family: 'Rubik', sans-serif;
+  font-size: 1em;
+  padding: 0 !important;
+}
+
+.guild-name {
+  font-size: 1.6em;
+  line-height: 3vh;
+  text-decoration: none !important;
+  font-weight: bold;
+}
+
+.server-name {
+  font-size: 1em;
+}
+
+.hr-divider {
+  border: 1px solid white;
+}
+
+.guild-desc {
+  font-size: 1.1em;
+  color: #282828;
+  padding-left: 1vw;
+  padding-right: 1vw;
+  line-height: 1.9vh;
+}

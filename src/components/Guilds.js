@@ -1,15 +1,27 @@
 import React from 'react'
-import "./Guilds.css"
+import {
+  Card,
+  CardText,
+  CardBody,
+  CardTitle,
+  CardSubtitle,
+  Button,
+  Col } from 'reactstrap'
 
 class Guilds extends React.Component {
   render() {
     return (
-      <div className="guild-box">
-        <a className={this.props.faction} href="#">{this.props.guildname}</a>
-        <span className="server-name"> {this.props.server} </span>
-        <hr className="hr-divider" />
-        <p className="guild-desc">{this.props.desc}</p>
-      </div>
+      <Col sm="4">
+        <Card body inverse className="the-boxes" style={{ backgroundColor: '#333', borderColor: '#FFF' }}>
+          <CardBody className="guild-box">
+            <CardTitle className={this.props.faction}>{this.props.guildname}</CardTitle>
+            <CardSubtitle className="text-muted">{this.props.server}</CardSubtitle>
+            <hr className="hr-divider" />
+            <CardText>{this.props.desc}</CardText>
+            <Button>Contact</Button>
+          </CardBody>
+        </Card>
+      </Col>
     )
   }
 }
