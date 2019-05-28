@@ -13,8 +13,6 @@ import {
   Button,
   Modal,
   ModalBody,
-  ModalFooter,
-  Label,
   Input,
   FormGroup,
   Form } from 'reactstrap';
@@ -24,11 +22,13 @@ class Directory extends React.Component {
     super(props)
 
     this.toggleNav = this.toggleNav.bind(this)
-    this.toggleModal = this.toggleModal.bind(this)
     this.handleLogin = this.handleLogin.bind(this)
+    this.toggleLoginModal = this.toggleLoginModal.bind(this)
+    this.toggleRegisterModal = this.toggleRegisterModal.bind(this)
     this.state = {
       isOpen: false,
-      modal: false,
+      loginModal: false,
+      registerModal: false,
       isLoggedIn: false
     }
   }
@@ -39,9 +39,15 @@ class Directory extends React.Component {
     })
   }
 
-  toggleModal() {
+  toggleLoginModal() {
     this.setState(prevState => ({
-      modal: !prevState.modal
+      loginModal: !prevState.loginModal
+    }))
+  }
+
+  toggleRegisterModal() {
+    this.setState(prevState => ({
+      registerModal: !prevState.registerModal
     }))
   }
 
@@ -74,11 +80,30 @@ class Directory extends React.Component {
               </DropdownMenu>
             </UncontrolledDropdown>
         :  [<NavItem>
-              <NavLink href="#" onClick={this.handleLogin}>Register</NavLink>
+              <NavLink href="#" onClick={this.toggleRegisterModal}> Register </NavLink>
+                <Modal isOpen={this.state.registerModal} toggle={this.toggleRegisterModal}>
+                  <ModalBody>
+                    <Form>
+                      <FormGroup>
+                        <Input type="username" name="username" placeholder="Username" />
+                      </FormGroup>
+                      <FormGroup>
+                        <Input type="email" name="email" placeholder="Email" />
+                      </FormGroup>
+                      <FormGroup>
+                        <Input type="password" name="password" placeholder="Password" />
+                      </FormGroup>
+                      <FormGroup>
+                        <Input type="password" name="password" placeholder="Verify Password" />
+                      </FormGroup>
+                    </Form>
+                    <Button color="secondary"> Register </Button>
+                  </ModalBody>
+                </Modal>
             </NavItem>,
             <NavItem>
-              <NavLink href="#" onClick={this.toggleModal}>Login</NavLink>
-              <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
+              <NavLink href="#" onClick={this.toggleLoginModal}> Login </NavLink>
+              <Modal isOpen={this.state.loginModal} toggle={this.toggleLoginModal}>
                 <ModalBody>
                   <Form>
                     <FormGroup>
