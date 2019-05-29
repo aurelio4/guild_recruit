@@ -115,7 +115,7 @@ class Directory extends React.Component {
                   </Form>
                   <Button color="secondary" onClick={() => {
                     this.handleLogin();
-                    this.toggleModal();
+                    this.toggleLoginModal();
                   }}> Log in </Button>
                 </ModalBody>
               </Modal>

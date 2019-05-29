@@ -4,6 +4,7 @@
 .main-div {
   max-width: 95% !important;
   margin: auto !important;
+  margin-bottom: 1vh !important;
 }
 
 .-alliance {
