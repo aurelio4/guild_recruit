@@ -1,4 +1,5 @@
 import React from 'react'
+import Fire from './Fire'
 import {
   Collapse,
   Navbar,
@@ -23,14 +24,35 @@ class Directory extends React.Component {
 
     this.toggleNav = this.toggleNav.bind(this)
     this.handleLogin = this.handleLogin.bind(this)
+    this.authListener = this.authListener.bind(this)
     this.toggleLoginModal = this.toggleLoginModal.bind(this)
     this.toggleRegisterModal = this.toggleRegisterModal.bind(this)
     this.state = {
       isOpen: false,
       loginModal: false,
       registerModal: false,
-      isLoggedIn: false
+      isLoggedIn: false,
+      user: {}
     }
+  }
+
+  componentDidMount() {
+    this.authListener();
+  }
+
+  authListener() {
+    Fire.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.setState({ user })
+      } else {
+        this.setState({ user: null })
+      }
+    })
+  }
+
+  login(e) {
+    e.preventDefault()
+    Fire.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
   }
 
   toggleNav() {
@@ -55,7 +77,6 @@ class Directory extends React.Component {
     this.setState(prevState => ({
       isLoggedIn: !prevState.isLoggedIn
     }))
-    console.log(this.state.isLoggedIn)
   }
 
   render() {
