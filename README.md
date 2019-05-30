@@ -1,4 +1,4 @@
 <b> Guild Recruitment </b><hr />
 
 Help players find raiding guilds on World of Warcraft<br /><br />
-This is my current full time project.
+You can see a preview <a href="https://chelkuhs.github.io/guild_recruit/">Here</a>
