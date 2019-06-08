@@ -1,6 +1,5 @@
 import React from 'react'
 import Fire from './Fire'
-import './LoggedOut.css'
 import {
   NavItem,
   NavLink,
@@ -59,6 +58,8 @@ class LoggedOut extends React.Component {
       registerModal: !prevState.registerModal
     }))
   }
+
+
 
   render() {
     return(

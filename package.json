@@ -2,10 +2,13 @@
   "name": "guild_recruit",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://chelkuhs.github.io/guild_recruit/",
   "dependencies": {
+    "babel-preset-react-app": "^7.0.0",
     "bootstrap": "^4.3.1",
     "express": "^4.17.1",
     "firebase": "^6.1.0",
+    "gh-pages": "^2.0.1",
     "jquery": "^3.4.1",
     "mysql": "^2.17.1",
     "popper.js": "^1.15.0",
@@ -14,12 +17,13 @@
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.1",
     "reactstrap": "^8.0.0"
-    
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
