@@ -114,15 +114,15 @@ class LoggedIn extends React.Component {
           <ModalBody>
             <Form>
               <FormGroup>
-                <Label for="username">Username</Label>
+                <Label style={{ color: '#000' }} for="username">Username</Label>
                 <Input type="username" name="profileUsername" value={this.state.profileUsername} onChange={this.handleChange} disabled={this.state.editDisabled} />
               </FormGroup>
               <FormGroup>
-                <Label for="email">Email</Label>
+                <Label style={{ color: '#000' }} for="email">Email</Label>
                 <Input type="email" name="email" value={this.state.profileEmail} disabled />
               </FormGroup>
               <FormGroup>
-                <Label for="discord">Discord</Label>
+                <Label style={{ color: '#000' }} for="discord">Discord</Label>
                 <Input type="text" name="profileDiscord" value={this.state.profileDiscord} onChange={this.handleChange} disabled={this.state.editDisabled} />
                 <FormText color="muted">
                   Example: chelk#4281
