@@ -52,16 +52,11 @@
   margin-left: .5vw;
 }
 
+.btn-float-r {
+  float: right;
+}
+
 .error-message {
   color: #DC3545;
   margin-left: 5px;
-}
-
-.login-button {
-  float: right;
-  margin-left: .5vw;
-}
-
-.register-button {
-  float: right;
 }

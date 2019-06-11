@@ -24,6 +24,7 @@ class LoggedOut extends React.Component {
     this.state = {
       loginModal: false,
       registerModal: false,
+      username: '',
       email: '',
       password: ''
     }
@@ -41,6 +42,14 @@ class LoggedOut extends React.Component {
       .catch((error) => {
         console.log(error);
       })
+    Fire.firestore().collection('users').doc(this.state.email).set({
+      email: this.state.email,
+      username: this.state.username
+    }).then(() => {
+      console.log("Document successfully written!")
+    }).catch(err => {
+      console.log("Error writing document: ", err)
+    })
   }
 
   handleChange(e) {
@@ -59,15 +68,16 @@ class LoggedOut extends React.Component {
     }))
   }
 
-
-
   render() {
-    return(
+    return([
       <NavItem>
-        <NavLink href="#" onClick={this.toggleLoginModal}> Login / Register </NavLink>
-        <Modal isOpen={this.state.loginModal} toggle={this.toggleLoginModal}>
+        <NavLink href="#" onClick={this.toggleRegisterModal}> Register </NavLink>
+        <Modal isOpen={this.state.registerModal} toggle={this.toggleRegisterModal}>
           <ModalBody>
             <Form>
+              <FormGroup>
+                <Input type="username" name="username" value={this.state.username} onChange={this.handleChange} placeholder="Username" />
+              </FormGroup>
               <FormGroup>
                 <Input type="email" name="email" value={this.state.email} onChange={this.handleChange} placeholder="Email" />
               </FormGroup>
@@ -75,18 +85,34 @@ class LoggedOut extends React.Component {
                 <Input type="password" name="password" value={this.state.password} onChange={this.handleChange} placeholder="Password" />
               </FormGroup>
             </Form>
-            <Button className="login-button" color="secondary" onClick={() => {
-              this.login();
-              this.toggleLoginModal();
-            }}> Log in </Button>
-            <Button className="register-button" color="secondary" onClick={() => {
+            <Button className="btn-float-r" color="secondary" onClick={() => {
               this.signup();
-              this.toggleLoginModal();
+              this.toggleRegisterModal();
             }}> Register </Button>
-            <p className="error-message" color="danger">{this.props.error}</p>
           </ModalBody>
         </Modal>
+      </NavItem>,
+      <NavItem>
+        <NavLink href="#" onClick={this.toggleLoginModal}> Login </NavLink>
+        <Modal isOpen={this.state.loginModal} toggle={this.toggleLoginModal}>
+        <ModalBody>
+          <Form>
+            <FormGroup>
+              <Input type="email" name="email" value={this.state.email} onChange={this.handleChange} placeholder="Email" />
+            </FormGroup>
+            <FormGroup>
+              <Input type="password" name="password" value={this.state.password} onChange={this.handleChange} placeholder="Password" />
+            </FormGroup>
+          </Form>
+          <Button className="btn-float-r" color="secondary" onClick={() => {
+              this.login();
+              this.toggleRegisterModal();
+            }}> Log in </Button>
+          <p className="error-message" color="danger">{this.props.error}</p>
+        </ModalBody>
+        </Modal>
       </NavItem>
+      ]
     )
   }
 }
