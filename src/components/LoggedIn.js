@@ -35,7 +35,8 @@ class LoggedIn extends React.Component {
       editDisabled: true,
       profileUsername: '',
       profileEmail: '',
-      profileDiscord: ''
+      profileDiscord: '',
+      playerUid: ''
     }
   }
 
@@ -72,14 +73,16 @@ class LoggedIn extends React.Component {
   getUserEmail() {
     Fire.auth().onAuthStateChanged( user => {
       if(user) {
+        const userUid = Fire.auth().currentUser.uid
         this.setState({ profileEmail: user.email })
+        this.setState({ playerUid: userUid})
       }
     })
+
   }
 
   getUserInfo() {
-    const playerInfo = Fire.firestore().collection('users').doc(this.state.profileEmail)
-
+    const playerInfo = Fire.firestore().collection('users').doc(this.state.playerUid)
     playerInfo.get().then(doc => {
       if(doc.exists) {
         var data = JSON.stringify(doc.data())
@@ -95,7 +98,7 @@ class LoggedIn extends React.Component {
   }
 
   setUserProfile() {
-    Fire.firestore().collection('users').doc(this.state.profileEmail).set({
+    Fire.firestore().collection('users').doc(this.state.playerUid).set({
       username: this.state.profileUsername,
       discord: this.state.profileDiscord,
       email: this.state.profileEmail
