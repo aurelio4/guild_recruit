@@ -76,9 +76,15 @@ class LoggedIn extends React.Component {
         const userUid = Fire.auth().currentUser.uid
         this.setState({ profileEmail: user.email })
         this.setState({ playerUid: userUid})
+        Fire.firestore().collection('users').doc(this.state.playerUid).get().then(doc => {
+          if(doc.exists) {
+            var data = JSON.stringify(doc.data())
+            var user = JSON.parse(data)
+            this.setState({ profileUsername: user.username })
+          }
+        })
       }
     })
-
   }
 
   getUserInfo() {
@@ -112,7 +118,7 @@ class LoggedIn extends React.Component {
   render() {
     return ([
       <NavItem>
-        <NavLink href="#" onClick={() => {this.toggleProfile(); this.getUserInfo()}}> My Profile </NavLink>
+        <NavLink href="#" onClick={() => {this.toggleProfile(); this.getUserInfo()}}> {this.state.profileUsername} </NavLink>
         <Modal isOpen={this.state.profileModal} toggle={this.toggleProfile}>
           <ModalBody>
             <Form>

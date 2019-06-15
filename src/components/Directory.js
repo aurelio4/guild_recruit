@@ -46,8 +46,8 @@ class Directory extends React.Component {
         <Collapse isOpen={this.state.isOpen} navbar>
           <Nav className="ml-auto" navbar>
           {this.state.user
-        ?  <LoggedIn />
-        :  <LoggedOut />}
+          ?  <LoggedIn />
+          :  <LoggedOut />}
           </Nav>
         </Collapse>
       </Navbar>
