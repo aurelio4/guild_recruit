@@ -209,7 +209,7 @@ class LoggedIn extends React.Component {
                 <InputGroup>
                   <InputGroupButtonDropdown addonType="append" isOpen={this.state.serverSelect} toggle={this.toggleServerSelect}>
                     <DropdownToggle caret>
-                      {this.state.guildRegion ? this.state.guildRegion : "Server"}
+                      {this.state.guildRegion ? this.state.guildRegion : "Region"}
                     </DropdownToggle>
                     <DropdownMenu>
                       <DropdownItem onClick={this.setRegionEU}>EU</DropdownItem>
