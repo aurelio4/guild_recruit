@@ -9,13 +9,15 @@ import {
   FormGroup,
   FormText,
   Input,
+  InputGroup,
+  InputGroupButtonDropdown,
   Label,
   Modal,
   ModalBody,
   NavLink,
   NavItem,
   UncontrolledDropdown
-} from 'reactstrap';
+} from 'reactstrap'
 
 class LoggedIn extends React.Component {
   constructor(props) {
@@ -29,14 +31,25 @@ class LoggedIn extends React.Component {
     this.getUserInfo = this.getUserInfo.bind(this)
     this.getUserEmail = this.getUserEmail.bind(this)
     this.finishEdit = this.finishEdit.bind(this)
+    this.toggleAddGuild = this.toggleAddGuild.bind(this)
+    this.addGuildToDB = this.addGuildToDB.bind(this)
+    this.toggleServerSelect = this.toggleServerSelect.bind(this)
+    this.setRegionEU = this.setRegionEU.bind(this)
+    this.setRegionNA = this.setRegionNA.bind(this)
 
     this.state = {
       profileModal: false,
+      addGuildModal: false,
       editDisabled: true,
       profileUsername: '',
       profileEmail: '',
       profileDiscord: '',
-      playerUid: ''
+      profileUid: '',
+      guildName: '',
+      guildRegion: '',
+      guildServer: '',
+      guildDesc: '',
+      serverSelect: false
     }
   }
 
@@ -64,9 +77,29 @@ class LoggedIn extends React.Component {
     this.setState({ [e.target.name]: e.target.value });
   }
 
+  setRegionEU() {
+    this.setState({ guildRegion: 'EU'})
+  }
+
+  setRegionNA() {
+    this.setState({ guildRegion: 'NA' })
+  }
+
   toggleProfile() {
     this.setState(prevState => ({
       profileModal: !prevState.profileModal
+    }))
+  }
+
+  toggleAddGuild() {
+    this.setState(prevState => ({
+      addGuildModal: !prevState.addGuildModal
+    }))
+  }
+
+  toggleServerSelect() {
+     this.setState(prevState => ({
+      serverSelect: !prevState.serverSelect
     }))
   }
 
@@ -75,8 +108,8 @@ class LoggedIn extends React.Component {
       if(user) {
         const userUid = Fire.auth().currentUser.uid
         this.setState({ profileEmail: user.email })
-        this.setState({ playerUid: userUid})
-        Fire.firestore().collection('users').doc(this.state.playerUid).get().then(doc => {
+        this.setState({ profileUid: userUid})
+        Fire.firestore().collection('users').doc(this.state.profileUid).get().then(doc => {
           if(doc.exists) {
             var data = JSON.stringify(doc.data())
             var user = JSON.parse(data)
@@ -88,7 +121,7 @@ class LoggedIn extends React.Component {
   }
 
   getUserInfo() {
-    const playerInfo = Fire.firestore().collection('users').doc(this.state.playerUid)
+    const playerInfo = Fire.firestore().collection('users').doc(this.state.profileUid)
     playerInfo.get().then(doc => {
       if(doc.exists) {
         var data = JSON.stringify(doc.data())
@@ -99,19 +132,33 @@ class LoggedIn extends React.Component {
         console.log("No such document")
       }
     }).catch((err) => {
-      console.log("Error getting document: ", err)
+      console.log("Error getting document from DB: ", err)
     })
   }
 
   setUserProfile() {
-    Fire.firestore().collection('users').doc(this.state.playerUid).set({
+    Fire.firestore().collection('users').doc(this.state.profileUid).set({
       username: this.state.profileUsername,
       discord: this.state.profileDiscord,
       email: this.state.profileEmail
     }).then(() => {
       console.log("Written to Firestore")
     }).catch(err => {
-      console.log("Error writing document: ", err)
+      console.log("Error writing to DB: ", err)
+    })
+  }
+
+  addGuildToDB() {
+    Fire.firestore().collection('guilds').doc(this.state.profileUid)
+    .set({
+      guildName: this.state.guildName,
+      guildServer: this.state.guildServer,
+      guildRegion: this.state.guildRegion,
+      guildDesc: this.state.guildDesc
+    }).then(() => {
+      console.log("Successfully written to Firestore")
+    }).catch(err => {
+      console.log("Error writing to DB: ", err)
     })
   }
 
@@ -149,8 +196,42 @@ class LoggedIn extends React.Component {
           Options
         </DropdownToggle>
         <DropdownMenu right>
-          <DropdownItem> Add(/edit?) Guild</DropdownItem>
-          <DropdownItem> Show Guilds Applied To?</DropdownItem>
+          <DropdownItem onClick={this.toggleAddGuild}> Add Guild</DropdownItem>
+          <Modal isOpen={this.state.addGuildModal} toggle={this.toggleAddGuild}>
+            <ModalBody>
+            <Form>
+              <FormGroup>
+                <Label style={{ color: '#000' }} for="guildName">Guild Name</Label>
+                <Input type="text" name="guildName" value={this.state.guildName} onChange={this.handleChange} />
+              </FormGroup>
+              <FormGroup>
+                <Label style={{ color: '#000' }} for="guildServer">Guild Server</Label>
+                <InputGroup>
+                  <InputGroupButtonDropdown addonType="append" isOpen={this.state.serverSelect} toggle={this.toggleServerSelect}>
+                    <DropdownToggle caret>
+                      {this.state.guildRegion ? this.state.guildRegion : "Server"}
+                    </DropdownToggle>
+                    <DropdownMenu>
+                      <DropdownItem onClick={this.setRegionEU}>EU</DropdownItem>
+                      <DropdownItem onClick={this.setRegionNA}>NA</DropdownItem>
+                    </DropdownMenu>
+                  </InputGroupButtonDropdown>
+                  <Input type="text" name="guildServer" value={this.state.guildServer} onChange={this.handleChange} />
+                </InputGroup>
+              </FormGroup>
+              <FormGroup>
+                <Label style={{ color: '#000' }} for="guildDesc">Guild Description</Label>
+                <Input type="text" name="guildDesc" value={this.state.guildDesc} onChange={this.handleChange} />
+                <FormText color={this.state.guildDesc.length > 140 ? "danger" : "muted"}>
+                  Character count: {this.state.guildDesc.length} / 140
+                </FormText>
+              </FormGroup>
+              <Button className="btn-float-r btn-spacing" color="secondary" onClick={this.toggleAddGuild}>Close</Button>
+              <Button className="btn-float-r" color="success" onClick={() => {this.addGuildToDB(); this.toggleAddGuild();}}>Add</Button>
+            </Form>
+            </ModalBody>
+          </Modal>
+          <DropdownItem> Show Applications</DropdownItem>
           <DropdownItem divider />
           <DropdownItem onClick={this.logout}>
             Log Out

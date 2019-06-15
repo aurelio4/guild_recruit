@@ -18,7 +18,8 @@ class Guilds extends React.Component {
             <CardSubtitle className="text-muted">{this.props.server}</CardSubtitle>
             <hr className="hr-divider" />
             <CardText>{this.props.desc}</CardText>
-            <Button>Contact</Button>
+            <Button>Apply</Button>
+            <Button className="btn-spacing">Contact</Button>
           </CardBody>
         </Card>
       </Col>
