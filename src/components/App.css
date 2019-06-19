@@ -52,6 +52,10 @@
   margin-left: .5vw;
 }
 
+.badge-spacing {
+  margin-left: .3vw;
+}
+
 .btn-float-r {
   float: right;
 }
@@ -59,4 +63,12 @@
 .error-message {
   color: #DC3545;
   margin-left: 5px;
+}
+
+.visible {
+  visibility: visible;
+}
+
+.invisible {
+  visibility: hidden;
 }

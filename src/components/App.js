@@ -1,10 +1,18 @@
 import React from 'react'
 import Guilds from './Guilds'
 import Directory from './Directory'
+import Fire from './Fire'
 import { Row } from 'reactstrap'
 import './App.css'
 
 class App extends React.Component {
+  constructor() {
+    super()
+    this.state = {
+
+    }
+  }
+
   render() {
 
     const alliance = 'guild-name -alliance'
