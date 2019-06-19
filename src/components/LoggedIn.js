@@ -35,9 +35,13 @@ class LoggedIn extends React.Component {
     this.toggleAddGuild = this.toggleAddGuild.bind(this)
     this.addGuildToDB = this.addGuildToDB.bind(this)
     this.toggleRegionSelect = this.toggleRegionSelect.bind(this)
+    this.toggleFactionSelect = this.toggleFactionSelect.bind(this)
     this.setRegionEU = this.setRegionEU.bind(this)
     this.setRegionNA = this.setRegionNA.bind(this)
+    this.setFactionA = this.setFactionA.bind(this)
+    this.setFactionH = this.setFactionH.bind(this)
     this.checkData = this.checkData.bind(this)
+    this.ucFirst = this.ucFirst.bind(this)
 
     this.state = {
       profileModal: false,
@@ -55,7 +59,11 @@ class LoggedIn extends React.Component {
       guildServerError: '',
       guildDesc: '',
       guildDescError: '',
+      guildFaction: '',
+      guildFactionError: '',
+      factionColor: 'secondary',
       regionSelect: false,
+      factionSelect: false,
       userHasGuild: false
     }
   }
@@ -84,12 +92,27 @@ class LoggedIn extends React.Component {
     this.setState({ [e.target.name]: e.target.value });
   }
 
+  ucFirst(s) {
+    if (typeof s !== 'string') return ''
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  }
+
   setRegionEU() {
     this.setState({ guildRegion: 'EU'})
   }
 
   setRegionNA() {
     this.setState({ guildRegion: 'NA' })
+  }
+
+  setFactionA() {
+    this.setState({ guildFaction: 'Alliance' })
+    this.setState({ factionColor: 'primary' })
+  }
+
+  setFactionH() {
+    this.setState({ guildFaction: 'Horde' })
+    this.setState({ factionColor: 'danger' })
   }
 
   toggleProfile() {
@@ -110,27 +133,38 @@ class LoggedIn extends React.Component {
     }))
   }
 
+  toggleFactionSelect() {
+    this.setState(prevState => ({
+      factionSelect: !prevState.factionSelect
+    }))
+  }
+
   checkData() {
     this.setState({
       guildDescError: '',
       guildNameError: '',
       guildRegionError: '',
       guildServerError: '',
+      guildFactionError: '',
       successfulGuildLog: false
     })
 
     if (!this.state.guildName) {
       this.setState({ guildNameError: 'Guild Name is empty!'})
     } else if(!this.state.guildRegion) {
-      this.setState({ guildRegionError: 'Guild Region isn\'t chosen!'})
+      this.setState({ guildRegionError: 'Region isn\'t chosen!'})
+    } else if(!this.state.guildFaction) {
+      this.setState({ guildFactionError: 'Faction isn\'t chosen!'})
     } else if(!this.state.guildServer) {
-      this.setState({ guildServerError: 'Guild Server is blank!' })
+      this.setState({ guildServerError: 'Server is blank!' })
     } else if(!this.state.guildDesc) {
-      this.setState({ guildDescError: 'Guild Description is blank!' })
+      this.setState({ guildDescError: 'Description is blank!' })
     } else if (this.state.guildName.length < 3 || this.state.guildName.length > 24) {
       this.setState({ guildNameError: 'Error in Guild Name length!'})
     } else if(this.state.guildDesc.length > 140) {
-      this.setState({ guildDescError: 'Guild Description is too long!'})
+      this.setState({ guildDescError: 'Description is too long!'})
+    } else if(this.state.guildDesc.length < 10) {
+      this.setState({ guildDescError: 'Description is too short!'})
     } else {
       this.addGuildToDB()
     }
@@ -156,6 +190,8 @@ class LoggedIn extends React.Component {
             console.log("No guild exists for this user!")
           )
         })
+      } else if (!user) {
+        console.log("No user!")
       }
     })
   }
@@ -193,9 +229,9 @@ class LoggedIn extends React.Component {
     .set({
       guildName: this.state.guildName,
       guildRegion: this.state.guildRegion,
-      guildServer: this.state.guildServer,
+      guildServer: this.ucFirst(this.state.guildServer),
       guildDesc: this.state.guildDesc,
-      adminUid: this.state.profileUid
+      guildFaction: this.state.guildFaction.toLowerCase()
     }).then(() => {
       console.log("Successfully written to Firestore")
       this.toggleAddGuild()
@@ -246,14 +282,23 @@ class LoggedIn extends React.Component {
             <ModalBody>
             <Form>
               <FormGroup>
-                <Label style={{ color: '#000' }} for="guildName">Guild Name<Badge color="danger" className="badge-spacing visible">{this.state.guildNameError}</Badge></Label>
-                <Input type="text" name="guildName" value={this.state.guildName} onChange={this.handleChange} />
+                <Badge color="danger" className="badge-spacing visible">{this.state.guildNameError}</Badge>
+                <Input type="text" name="guildName" value={this.state.guildName} onChange={this.handleChange} placeholder="Guild Name" />
               </FormGroup>
               <FormGroup>
-                <Label style={{ color: '#000' }} for="guildServer">Guild Server<Badge color="danger" className="badge-spacing visible">{this.state.guildRegionError}{this.state.guildServerError}</Badge></Label>
+                <Badge color="danger" className="badge-spacing visible">{this.state.guildFactionError}{this.state.guildRegionError}{this.state.guildServerError}</Badge>
                 <InputGroup>
+                  <InputGroupButtonDropdown addonType="append" isOpen={this.state.factionSelect} toggle={this.toggleFactionSelect}>
+                    <DropdownToggle color={this.state.factionColor}>
+                      {this.state.guildFaction ? this.state.guildFaction : "Faction"}
+                    </DropdownToggle>
+                    <DropdownMenu>
+                      <DropdownItem onClick={this.setFactionA}>Alliance</DropdownItem>
+                      <DropdownItem onClick={this.setFactionH}>Horde</DropdownItem>
+                    </DropdownMenu>
+                  </InputGroupButtonDropdown>
                   <InputGroupButtonDropdown addonType="append" isOpen={this.state.regionSelect} toggle={this.toggleRegionSelect}>
-                    <DropdownToggle caret>
+                    <DropdownToggle>
                       {this.state.guildRegion ? this.state.guildRegion : "Region"}
                     </DropdownToggle>
                     <DropdownMenu>
@@ -261,12 +306,12 @@ class LoggedIn extends React.Component {
                       <DropdownItem onClick={this.setRegionNA}>NA</DropdownItem>
                     </DropdownMenu>
                   </InputGroupButtonDropdown>
-                  <Input type="text" name="guildServer" value={this.state.guildServer} onChange={this.handleChange} />
+                  <Input type="text" name="guildServer" value={this.state.guildServer} onChange={this.handleChange} placeholder="Server Name" />
                 </InputGroup>
               </FormGroup>
               <FormGroup>
-                <Label style={{ color: '#000' }} for="guildDesc">Guild Description<Badge color="danger" className="badge-spacing visible">{this.state.guildDescError}</Badge></Label>
-                <Input type="text" name="guildDesc" value={this.state.guildDesc} onChange={this.handleChange} />
+                <Badge color="danger" className="badge-spacing visible">{this.state.guildDescError}</Badge>
+                <Input type="text" name="guildDesc" value={this.state.guildDesc} onChange={this.handleChange} placeholder="Description" />
                 <FormText color={this.state.guildDesc.length > 140 ? "danger" : "muted"}>
                   Character count: {this.state.guildDesc.length} / 140
                 </FormText>

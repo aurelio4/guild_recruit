@@ -96,7 +96,8 @@ class LoggedOut extends React.Component {
                 </FormText>
               </FormGroup>
             </Form>
-            <Button className="btn-float-r" color="secondary" onClick={() => {
+            <Button className="btn-float-r btn-spacing" color="danger" onClick={this.toggleRegisterModal}>Close</Button>
+            <Button className="btn-float-r" color="success" onClick={() => {
               this.signup();
               this.toggleRegisterModal();
             }}> Register </Button>
@@ -115,7 +116,8 @@ class LoggedOut extends React.Component {
               <Input type="password" name="password" value={this.state.password} onChange={this.handleChange} placeholder="Password" />
             </FormGroup>
           </Form>
-          <Button className="btn-float-r" color="secondary" onClick={() => {
+          <Button className="btn-float-r btn-spacing" color="danger" onClick={this.toggleLoginModal}>Close</Button>
+          <Button className="btn-float-r" color="success" onClick={() => {
               this.login();
               this.toggleRegisterModal();
             }}> Log in </Button>

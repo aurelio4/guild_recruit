@@ -1,4 +1,5 @@
 import React from 'react'
+import Fire from './Fire'
 import {
   Card,
   CardText,
@@ -9,6 +10,30 @@ import {
   Col } from 'reactstrap'
 
 class Guilds extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.checkUserLoggedIn = this.checkUserLoggedIn.bind(this)
+
+    this.state = {
+      userLoggedIn: false
+    }
+  }
+
+  componentWillMount() {
+    this.checkUserLoggedIn()
+  }
+
+  checkUserLoggedIn() {
+    Fire.auth().onAuthStateChanged( user => {
+      if(user) {
+        this.setState({ userLoggedIn: true })
+      } else {
+        this.setState({ userLoggedIn: false })
+      }
+    })
+  }
+
   render() {
     return (
       <Col sm="4">
@@ -18,8 +43,9 @@ class Guilds extends React.Component {
             <CardSubtitle className="text-muted">{this.props.server}</CardSubtitle>
             <hr className="hr-divider" />
             <CardText>{this.props.desc}</CardText>
-            <Button>Apply</Button>
-            <Button className="btn-spacing">Contact</Button>
+            {this.state.userLoggedIn
+            ? [<Button>Apply</Button>,<Button className="btn-spacing">Contact</Button>]
+            : " " }
           </CardBody>
         </Card>
       </Col>
