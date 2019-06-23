@@ -11,7 +11,9 @@ import {
   FormText,
   Input,
   InputGroup,
+  InputGroupAddon,
   InputGroupButtonDropdown,
+  InputGroupText,
   Label,
   Modal,
   ModalBody,
@@ -33,6 +35,7 @@ class LoggedIn extends React.Component {
     this.getUserEmail = this.getUserEmail.bind(this)
     this.finishEdit = this.finishEdit.bind(this)
     this.toggleAddGuild = this.toggleAddGuild.bind(this)
+    this.toggleManageGuild = this.toggleManageGuild.bind(this)
     this.addGuildToDB = this.addGuildToDB.bind(this)
     this.toggleRegionSelect = this.toggleRegionSelect.bind(this)
     this.toggleFactionSelect = this.toggleFactionSelect.bind(this)
@@ -42,10 +45,12 @@ class LoggedIn extends React.Component {
     this.setFactionH = this.setFactionH.bind(this)
     this.checkData = this.checkData.bind(this)
     this.ucFirst = this.ucFirst.bind(this)
+    this.getGuildInfo = this.getGuildInfo.bind(this)
 
     this.state = {
       profileModal: false,
       addGuildModal: false,
+      manageGuildModal: false,
       editDisabled: true,
       profileUsername: '',
       profileEmail: '',
@@ -127,6 +132,12 @@ class LoggedIn extends React.Component {
     }))
   }
 
+  toggleManageGuild() {
+    this.setState(prevState => ({
+      manageGuildModal: !prevState.manageGuildModal
+    }))
+  }
+
   toggleRegionSelect() {
      this.setState(prevState => ({
       regionSelect: !prevState.regionSelect
@@ -197,19 +208,42 @@ class LoggedIn extends React.Component {
   }
 
   getUserInfo() {
-    const playerInfo = Fire.firestore().collection('users').doc(this.state.profileUid)
-    playerInfo.get().then(doc => {
-      if(doc.exists) {
-        var data = JSON.stringify(doc.data())
-        var user = JSON.parse(data)
-        this.setState({ profileUsername: user.username })
-        this.setState({ profileDiscord: user.discord })
-      } else {
-        console.log("No such document")
-      }
-    }).catch((err) => {
-      console.log("Error getting document from DB: ", err)
-    })
+    Fire.firestore().collection('users').doc(this.state.profileUid)
+      .get().then(doc => {
+        if(doc.exists) {
+          var data = JSON.stringify(doc.data())
+          var user = JSON.parse(data)
+          this.setState({ profileUsername: user.username })
+          this.setState({ profileDiscord: user.discord })
+        } else {
+          console.log("No such document")
+        }
+      }).catch((err) => {
+        console.log("Error getting document from DB: ", err)
+      })
+  }
+
+  getGuildInfo() {
+    Fire.firestore().collection('guilds').doc(this.state.profileUid)
+      .get().then(doc => {
+        if(doc.exists) {
+          var data = JSON.stringify(doc.data())
+          var guild = JSON.parse(data)
+          this.setState({ 
+            guildName: guild.guildName,
+            guildFaction: guild.guildFaction,
+            guildRegion: guild.guildRegion,
+            guildServer: guild.guildServer,
+            guildDesc: guild.guildDesc
+           })
+           console.log(guild.guildFaction)
+           console.log(guild.guildRegion)
+           console.log(guild.guildServer)
+           console.log(guild.guildDesc)
+        } else { console.log("No such document!") }
+      }).catch(err => {
+        console.log("Error getting info from DB: ", err)
+      })
   }
 
   setUserProfile() {
@@ -230,8 +264,8 @@ class LoggedIn extends React.Component {
       guildName: this.state.guildName,
       guildRegion: this.state.guildRegion,
       guildServer: this.ucFirst(this.state.guildServer),
-      guildDesc: this.state.guildDesc,
-      guildFaction: this.state.guildFaction.toLowerCase()
+      guildDesc: this.ucFirst(this.state.guildDesc),
+      guildFaction: this.ucFirst(this.state.guildFaction)
     }).then(() => {
       console.log("Successfully written to Firestore")
       this.toggleAddGuild()
@@ -276,8 +310,32 @@ class LoggedIn extends React.Component {
         </DropdownToggle>
         <DropdownMenu right>
           {this.state.userHasGuild 
-          ? <DropdownItem> Manage Guild </DropdownItem>
+          ? <DropdownItem onClick={() => {this.getGuildInfo(); this.toggleManageGuild()}}> Manage Guild </DropdownItem>
           : <DropdownItem onClick={this.toggleAddGuild}>Add Guild</DropdownItem>}
+          <Modal isOpen={this.state.manageGuildModal} toggle={this.toggleManageGuild}>
+            <ModalBody>
+              <Form>
+                <FormGroup>
+                  <Label className="guild-title-font" style={{ color: '#000' }} for="guildName">Guild Name</Label>
+                  <Input className="info-font" type="text" name="guildName" defaultValue={this.state.guildName} disabled />
+                </FormGroup>
+                <FormGroup>
+                  <Label className="guild-title-font" style={{ color: '#000' }} for=" guild">Guild Server</Label>
+                  <InputGroup>
+                    <InputGroupAddon addonType="prepend">
+                      <InputGroupText className="info-font" >{this.state.guildFaction}</InputGroupText>
+                      <InputGroupText className="info-font" >{this.state.guildRegion}</InputGroupText>
+                    </InputGroupAddon>
+                    <Input className="info-font" type="text" name="guildName" defaultValue={this.state.guildServer} disabled/>
+                  </InputGroup>
+                </FormGroup>
+                <FormGroup>
+                  <Label className="guild-title-font" style={{ color: '#000' }} for="guildDesc">Guild Description</Label>
+                  <Input className="info-font" type="text" name="guildDesc" defaultValue={this.state.guildDesc} disabled />
+                </FormGroup>
+              </Form>
+            </ModalBody>
+          </Modal>
           <Modal isOpen={this.state.addGuildModal} toggle={this.toggleAddGuild}>
             <ModalBody>
             <Form>

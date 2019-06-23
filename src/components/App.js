@@ -18,6 +18,7 @@ class App extends React.Component {
 
   componentWillMount() {
     this.getUserUID()
+    this.guildInfo()
   }
 
   getUserUID() {
@@ -32,10 +33,14 @@ class App extends React.Component {
   guildInfo() {
     Fire.firestore().collection('guilds')
       .get().then(querySnapshot => {
-        const data = querySnapshot.docs.map(doc => doc.data())
-        console.log(data)
+        const data = querySnapshot.docs
+          .map(doc => doc.data())
+          console.log(data)
+          for(var i = 0; i < data.length; i++) {
+            console.log(data[i].guildName)
+          } 
       })
-  }
+    }
 
   render() {
     const alliance = 'guild-name -alliance'

@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Rubik&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Ubuntu:400,500&display=swap');
 
 .main-div {
   max-width: 95% !important;
@@ -54,6 +55,16 @@
 
 .badge-spacing {
   margin-bottom: .5vh;
+}
+
+.guild-title-font {
+  font-family: 'Ubuntu', sans-serif;
+  font-weight: 400;
+  font-size: 1.2em
+}
+
+.info-font {
+  font-family: 'Ubuntu', sans-serif;
 }
 
 .btn-float-r {
