@@ -28,17 +28,16 @@ class LoggedIn extends React.Component {
     this.logout = this.logout.bind(this)
     this.toggleProfile = this.toggleProfile.bind(this)
     this.updateUsername = this.updateUsername.bind(this)
-    this.startEdit = this.startEdit.bind(this)
     this.setUserProfile = this.setUserProfile.bind(this)
     this.handleChange = this.handleChange.bind(this)
     this.getUserInfo = this.getUserInfo.bind(this)
     this.getUserEmail = this.getUserEmail.bind(this)
-    this.finishEdit = this.finishEdit.bind(this)
     this.toggleAddGuild = this.toggleAddGuild.bind(this)
     this.toggleManageGuild = this.toggleManageGuild.bind(this)
     this.addGuildToDB = this.addGuildToDB.bind(this)
     this.toggleRegionSelect = this.toggleRegionSelect.bind(this)
     this.toggleFactionSelect = this.toggleFactionSelect.bind(this)
+    this.setEditDisabled = this.setEditDisabled.bind(this)
     this.setRegionEU = this.setRegionEU.bind(this)
     this.setRegionNA = this.setRegionNA.bind(this)
     this.setFactionA = this.setFactionA.bind(this)
@@ -80,14 +79,6 @@ class LoggedIn extends React.Component {
   logout() {
     Fire.auth().signOut();
   }
-  
-  startEdit() {
-    this.setState({ editDisabled: false })
-  }
-
-  finishEdit() {
-    this.setState({ editDisabled: true })
-  }
 
   updateUsername(value) {
     this.setState({ profileUsername: value })
@@ -118,6 +109,12 @@ class LoggedIn extends React.Component {
   setFactionH() {
     this.setState({ guildFaction: 'Horde' })
     this.setState({ factionColor: 'danger' })
+  }
+
+  setEditDisabled() {
+    this.setState(prevState => ({
+      editDisabled: !prevState.editDisabled
+    }))
   }
 
   toggleProfile() {
@@ -298,8 +295,17 @@ class LoggedIn extends React.Component {
                 </FormText>
               </FormGroup>
               <Button className="btn-float-r btn-spacing" color="secondary" onClick={this.toggleProfile}>Close</Button>
-              <Button className="btn-float-r btn-spacing" color="info" onClick={this.startEdit}>Edit</Button>
-              <Button className="btn-float-r" color="success" onClick={() => {this.toggleProfile(); this.setUserProfile(); this.finishEdit();}}>Update</Button>
+              {this.state.editDisabled 
+              ? <Button className="btn-float-r btn-spacing" 
+                        color="info"
+                        onClick={this.setEditDisabled}>
+                        Edit
+                  </Button>
+              : <Button className="btn-float-r btn-spacing" 
+                        color="success"
+                        onClick={() => {this.setEditDisabled(); this.setUserProfile(); this.toggleProfile()}}>
+                        Update
+                </Button>}
             </Form>
           </ModalBody>
         </Modal>
@@ -316,11 +322,11 @@ class LoggedIn extends React.Component {
             <ModalBody>
               <Form>
                 <FormGroup>
-                  <Label className="guild-title-font" style={{ color: '#000' }} for="guildName">Guild Name</Label>
+                  <Label style={{ color: '#000' }} for="guildName">Guild Name</Label>
                   <Input className="info-font" type="text" name="guildName" defaultValue={this.state.guildName} disabled />
                 </FormGroup>
                 <FormGroup>
-                  <Label className="guild-title-font" style={{ color: '#000' }} for=" guild">Guild Server</Label>
+                  <Label style={{ color: '#000' }} for=" guild">Guild Server</Label>
                   <InputGroup>
                     <InputGroupAddon addonType="prepend">
                       <InputGroupText className="info-font" >{this.state.guildFaction}</InputGroupText>
@@ -330,9 +336,10 @@ class LoggedIn extends React.Component {
                   </InputGroup>
                 </FormGroup>
                 <FormGroup>
-                  <Label className="guild-title-font" style={{ color: '#000' }} for="guildDesc">Guild Description</Label>
+                  <Label style={{ color: '#000' }} for="guildDesc">Guild Description</Label>
                   <Input className="info-font" type="text" name="guildDesc" defaultValue={this.state.guildDesc} disabled />
                 </FormGroup>
+                <Button className="btn-float-r btn-spacing" color="secondary" onClick={this.toggleManageGuild}>Close</Button>
               </Form>
             </ModalBody>
           </Modal>
