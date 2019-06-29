@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/guild_recruit/precache-manifest.e970749bbd4ad6fd0d134ac929a1a4b7.js"
+  "/guild_recruit/precache-manifest.23ad902d2c99f71375294f363e291f94.js"
 );
 
 self.addEventListener('message', (event) => {
