@@ -37,6 +37,10 @@
   font-size: 1em;
 }
 
+.ras {
+  display: inline;
+}
+
 .hr-divider {
   border: 1px solid white;
 }

@@ -39,7 +39,7 @@ class LoggedIn extends React.Component {
     this.toggleFactionSelect = this.toggleFactionSelect.bind(this)
     this.setEditDisabled = this.setEditDisabled.bind(this)
     this.setRegionEU = this.setRegionEU.bind(this)
-    this.setRegionNA = this.setRegionNA.bind(this)
+    this.setRegionUS = this.setRegionUS.bind(this)
     this.setFactionA = this.setFactionA.bind(this)
     this.setFactionH = this.setFactionH.bind(this)
     this.checkData = this.checkData.bind(this)
@@ -97,8 +97,8 @@ class LoggedIn extends React.Component {
     this.setState({ guildRegion: 'EU'})
   }
 
-  setRegionNA() {
-    this.setState({ guildRegion: 'NA' })
+  setRegionUS() {
+    this.setState({ guildRegion: 'US' })
   }
 
   setFactionA() {
@@ -233,10 +233,6 @@ class LoggedIn extends React.Component {
             guildServer: guild.guildServer,
             guildDesc: guild.guildDesc
            })
-           console.log(guild.guildFaction)
-           console.log(guild.guildRegion)
-           console.log(guild.guildServer)
-           console.log(guild.guildDesc)
         } else { console.log("No such document!") }
       }).catch(err => {
         console.log("Error getting info from DB: ", err)
@@ -259,7 +255,7 @@ class LoggedIn extends React.Component {
     Fire.firestore().collection('guilds').doc(this.state.profileUid)
     .set({
       guildName: this.state.guildName,
-      guildRegion: this.state.guildRegion,
+      guildRegion: this.state.guildRegion + "-",
       guildServer: this.ucFirst(this.state.guildServer),
       guildDesc: this.ucFirst(this.state.guildDesc),
       guildFaction: this.ucFirst(this.state.guildFaction)
@@ -368,7 +364,7 @@ class LoggedIn extends React.Component {
                     </DropdownToggle>
                     <DropdownMenu>
                       <DropdownItem onClick={this.setRegionEU}>EU</DropdownItem>
-                      <DropdownItem onClick={this.setRegionNA}>NA</DropdownItem>
+                      <DropdownItem onClick={this.setRegionUS}>US</DropdownItem>
                     </DropdownMenu>
                   </InputGroupButtonDropdown>
                   <Input type="text" name="guildServer" value={this.state.guildServer} onChange={this.handleChange} placeholder="Server Name" />

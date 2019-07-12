@@ -39,10 +39,11 @@ class Guilds extends React.Component {
       <Col sm="4">
         <Card body inverse className="the-boxes" style={{ backgroundColor: '#333', borderColor: '#FFF' }}>
           <CardBody className="guild-box">
-            <CardTitle className={this.props.faction}>{this.props.guildname}</CardTitle>
-            <CardSubtitle className="text-muted">{this.props.server}</CardSubtitle>
+            <CardTitle className={this.props.guildFaction}>{this.props.guildName}</CardTitle>
+            <CardSubtitle className="ras text-muted">{this.props.guildRegion}</CardSubtitle>
+            <CardSubtitle className="ras text-muted">{this.props.guildServer}</CardSubtitle>
             <hr className="hr-divider" />
-            <CardText>{this.props.desc}</CardText>
+            <CardText>{this.props.guildDesc}</CardText>
             {this.state.userLoggedIn
             ? [<Button>Apply</Button>,<Button className="btn-spacing">Contact</Button>]
             : " " }
