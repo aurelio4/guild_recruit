@@ -42,7 +42,7 @@ class LoggedIn extends React.Component {
     this.setRegionUS = this.setRegionUS.bind(this)
     this.setFactionA = this.setFactionA.bind(this)
     this.setFactionH = this.setFactionH.bind(this)
-    this.checkData = this.checkData.bind(this)
+    this.checkGuildData = this.checkGuildData.bind(this)
     this.ucFirst = this.ucFirst.bind(this)
     this.getGuildInfo = this.getGuildInfo.bind(this)
 
@@ -147,7 +147,7 @@ class LoggedIn extends React.Component {
     }))
   }
 
-  checkData() {
+  checkGuildData() {
     this.setState({
       guildDescError: '',
       guildNameError: '',
@@ -372,13 +372,13 @@ class LoggedIn extends React.Component {
               </FormGroup>
               <FormGroup>
                 <Badge color="danger" className="badge-spacing visible">{this.state.guildDescError}</Badge>
-                <Input type="text" name="guildDesc" value={this.state.guildDesc} onChange={this.handleChange} placeholder="Description" />
+                <Input type="textarea" name="guildDesc" value={this.state.guildDesc} onChange={this.handleChange} placeholder="Description" />
                 <FormText color={this.state.guildDesc.length > 140 ? "danger" : "muted"}>
                   Character count: {this.state.guildDesc.length} / 140
                 </FormText>
               </FormGroup>
               <Button className="btn-float-r btn-spacing" color="secondary" onClick={this.toggleAddGuild}>Close</Button>
-              <Button className="btn-float-r" color="success" onClick={() => {if (this.state.successfulGuildLog) { this.checkData() } else { this.checkData(); }}}>Add</Button>
+              <Button className="btn-float-r" color="success" onClick={() => {if (this.state.successfulGuildLog) { this.checkGuildData() } else { this.checkGuildData(); }}}>Add</Button>
             </Form>
             </ModalBody>
           </Modal>
