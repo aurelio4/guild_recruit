@@ -71,6 +71,12 @@
   font-family: 'Ubuntu', sans-serif;
 }
 
+.delete-font {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  font-size: 1.15em;
+}
+
 .btn-float-r {
   float: right;
 }
@@ -86,4 +92,8 @@
 
 .invisible {
   visibility: hidden;
+}
+
+.no-dots {
+  list-style: none;
 }

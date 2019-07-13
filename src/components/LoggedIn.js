@@ -17,6 +17,7 @@ import {
   Label,
   Modal,
   ModalBody,
+  ModalFooter,
   NavLink,
   NavItem,
   UncontrolledDropdown
@@ -29,11 +30,13 @@ class LoggedIn extends React.Component {
     this.toggleProfile = this.toggleProfile.bind(this)
     this.updateUsername = this.updateUsername.bind(this)
     this.setUserProfile = this.setUserProfile.bind(this)
+    this.deleteUserProfile = this.deleteUserProfile.bind(this)
     this.handleChange = this.handleChange.bind(this)
     this.getUserInfo = this.getUserInfo.bind(this)
     this.getUserEmail = this.getUserEmail.bind(this)
     this.toggleAddGuild = this.toggleAddGuild.bind(this)
     this.toggleManageGuild = this.toggleManageGuild.bind(this)
+    this.toggleDeleteModal = this.toggleDeleteModal.bind(this)
     this.addGuildToDB = this.addGuildToDB.bind(this)
     this.toggleRegionSelect = this.toggleRegionSelect.bind(this)
     this.toggleFactionSelect = this.toggleFactionSelect.bind(this)
@@ -50,6 +53,7 @@ class LoggedIn extends React.Component {
       profileModal: false,
       addGuildModal: false,
       manageGuildModal: false,
+      deleteModal: false,
       editDisabled: true,
       profileUsername: '',
       profileEmail: '',
@@ -132,6 +136,12 @@ class LoggedIn extends React.Component {
   toggleManageGuild() {
     this.setState(prevState => ({
       manageGuildModal: !prevState.manageGuildModal
+    }))
+  }
+
+  toggleDeleteModal() {
+    this.setState(prevState => ({
+      deleteModal: !prevState.deleteModal
     }))
   }
 
@@ -229,7 +239,7 @@ class LoggedIn extends React.Component {
           this.setState({ 
             guildName: guild.guildName,
             guildFaction: guild.guildFaction,
-            guildRegion: guild.guildRegion,
+            guildRegion: guild.guildRegion.slice(0, -1),
             guildServer: guild.guildServer,
             guildDesc: guild.guildDesc
            })
@@ -250,6 +260,24 @@ class LoggedIn extends React.Component {
       console.log("Error writing to DB: ", err)
     })
   }
+
+  deleteUserProfile() {
+    var canDelete = false
+    Fire.firestore().collection('users').doc(this.state.profileUid).delete()
+      .then(() => {
+        console.log("Document deleted successfully")
+        canDelete = true;
+        if(canDelete) {
+          Fire.auth().currentUser.delete().then(() => {
+            console.log("User deleted successfully")
+          }).catch(err => {
+            console.log("Error deleting user: ", err)
+          })
+        }
+      }).catch(err => {
+        console.log("Error deleting document: ", err)
+      })
+    }
 
   addGuildToDB() {
     Fire.firestore().collection('guilds').doc(this.state.profileUid)
@@ -333,7 +361,7 @@ class LoggedIn extends React.Component {
                 </FormGroup>
                 <FormGroup>
                   <Label style={{ color: '#000' }} for="guildDesc">Guild Description</Label>
-                  <Input className="info-font" type="text" name="guildDesc" defaultValue={this.state.guildDesc} disabled />
+                  <Input className="info-font" type="textarea" name="guildDesc" defaultValue={this.state.guildDesc} disabled />
                 </FormGroup>
                 <Button className="btn-float-r btn-spacing" color="secondary" onClick={this.toggleManageGuild}>Close</Button>
               </Form>
@@ -386,6 +414,25 @@ class LoggedIn extends React.Component {
           ? <DropdownItem> Show Applicants</DropdownItem>
           : <DropdownItem> Show Applications</DropdownItem>}
           <DropdownItem divider />
+          <DropdownItem onClick={this.toggleDeleteModal}>
+            Delete Account
+          </DropdownItem>
+          <Modal isOpen={this.state.deleteModal} toggle={this.toggleDeleteModal}>
+            <ModalBody>
+              <span className="delete-font">
+                Are you sure you want to permanently delete your account? Doing so will delete the following:
+                <ul className="no-dots">
+                  <li> - Guild (If applicable)</li>
+                  <li> - Guild applications (If applicable)</li>
+                  <li> - Profile</li>
+                </ul>
+              </span>
+            </ModalBody>
+            <ModalFooter>
+              <Button color="success" onClick={() => {this.deleteUserProfile(); this.toggleDeleteModal()}}>Delete</Button>
+              <Button color="danger" onClick={this.toggleDeleteModal}>Nevermind</Button>
+            </ModalFooter>
+          </Modal>
           <DropdownItem onClick={this.logout}>
             Log Out
           </DropdownItem>

@@ -12,7 +12,6 @@ import {
   FormText,
   Form } from 'reactstrap';
 
-
 class LoggedOut extends React.Component {
   constructor(props) {
     super(props)
@@ -23,10 +22,12 @@ class LoggedOut extends React.Component {
     this.toggleLoginModal = this.toggleLoginModal.bind(this)
     this.toggleRegisterModal = this.toggleRegisterModal.bind(this)
     this.checkPlayerData = this.checkPlayerData.bind(this)
+    this.getUsernames = this.getUsernames.bind(this)
 
     this.state = {
       loginModal: false,
       registerModal: false,
+      dbUsernames: [],
       username: '',
       usernameError: '',
       discord: '',
@@ -37,6 +38,10 @@ class LoggedOut extends React.Component {
       passwordError: '',
       uid: ''
     }
+  }
+
+  componentWillMount() {
+    this.getUsernames()
   }
 
   login(e) {
@@ -67,6 +72,17 @@ class LoggedOut extends React.Component {
     this.setState({ [e.target.name]: e.target.value });
   }
 
+  getUsernames() {
+    Fire.firestore().collection('users')
+      .get().then(snapshot => {
+        snapshot.forEach(doc => {
+          this.state.dbUsernames.push(doc.data().username)
+          console.log(this.state.dbUsernames)
+          console.log(this.state.dbUsernames[1])
+        })
+      })
+  }
+
   checkPlayerData() {
     this.setState({
       usernameError: '',
@@ -74,6 +90,9 @@ class LoggedOut extends React.Component {
       emailError: '',
       passwordError: ''
     })
+
+    // it needs to go up here or in this huge if statement somehow.
+    // maybe i can nest the if's with the for?
 
     if(!this.state.email) {
       this.setState({ emailError: "Email field is empty!" })
@@ -90,6 +109,16 @@ class LoggedOut extends React.Component {
     } else {
       this.signup();
       this.toggleRegisterModal();
+    }
+
+    // this statement is for checking if the username is the same
+    // as the one in the text field.
+
+    for(let i = 0; i > this.state.dbUsernames.length; i++) {
+      if(this.state.username === this.state.dbUsernames[i]) {
+        this.setState({ usernameError: "Username is taken!" })
+        console.log(this.state.usernameError)
+      }
     }
   }
 

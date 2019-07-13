@@ -73,7 +73,7 @@ class App extends React.Component {
       <div className="main-div">
         <CardDeck>
           <Guilds guildFaction={alliance} guildServer="Sargeras" guildRegion="US-" guildName="HelloQ" guildDesc="This is a test description." />
-          <Guilds guildFaction={alliance} guildServer="Sargeras" guildRegion="US-" guildName="HelloQ" guildDesc="This is a test description." />
+          <Guilds guildFaction={horde} guildServer="Sargeras" guildRegion="US-" guildName="HelloQ" guildDesc="This is a test description." />
           <Guilds guildFaction={alliance} guildServer="Sargeras" guildRegion="US-" guildName="HelloQ" guildDesc="This is a test description." />
         </CardDeck>
           <Directory />
