@@ -40,7 +40,7 @@ class LoggedOut extends React.Component {
     }
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.getUsernames()
   }
 
@@ -91,9 +91,6 @@ class LoggedOut extends React.Component {
       passwordError: ''
     })
 
-    // it needs to go up here or in this huge if statement somehow.
-    // maybe i can nest the if's with the for?
-
     if(!this.state.email) {
       this.setState({ emailError: "Email field is empty!" })
     } else if(!this.state.password) {
@@ -106,19 +103,11 @@ class LoggedOut extends React.Component {
       this.setState({ usernameError: "Username is too long!" })
     } else if(this.state.username.length < 3) {
       this.setState({ usernameError: "Username is too short!" })
+    } else if(this.state.username.length > 3 && this.state.username.length < 14) {
+      
     } else {
       this.signup();
       this.toggleRegisterModal();
-    }
-
-    // this statement is for checking if the username is the same
-    // as the one in the text field.
-
-    for(let i = 0; i > this.state.dbUsernames.length; i++) {
-      if(this.state.username === this.state.dbUsernames[i]) {
-        this.setState({ usernameError: "Username is taken!" })
-        console.log(this.state.usernameError)
-      }
     }
   }
 

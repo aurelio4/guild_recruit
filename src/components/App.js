@@ -18,12 +18,9 @@ class App extends React.Component {
     }
   }
 
-  componentWillMount() {
-    this.getUserUID()
-  }
-
   componentDidMount() {
     this.guildInfo()
+    this.getUserUID()
   }
 
   getUserUID() {
@@ -40,7 +37,7 @@ class App extends React.Component {
       .get().then(snapshot => {
         snapshot.forEach(doc => {
           this.setState({
-            posts: [{
+            guilds: [{
               id: doc.id,
               guildDesc: doc.data().guildDesc,
               guildFaction: doc.data().guildFaction,
@@ -49,21 +46,21 @@ class App extends React.Component {
               guildServer: doc.data().guildServer
             }]
           })
-          console.log(doc.data().guildName)
         })
       })
   }
 
   renderCards() {
     let guilds = this.state.guilds
-    for(var i = 0; i > guilds.length; i ++) {
-      return  <Guilds 
-                key={guilds[i].id}
-                guildFaction={guilds[i].guildFaction} 
-                guildServer={guilds[i].guildServer}
-                guildName={guilds[i].guildName} 
-                guildDesc={guilds[i].guildDesc} />
-    }
+    guilds.map(guild => {
+      console.log(guild)
+      return <Guilds
+              key={guild.id}
+              guildFaction={guild.guildFaction} 
+              guildServer={guild.guildServer}
+              guildName={guild.guildName} 
+              guildDesc={guild.guildDesc} />
+    })
   }
 
   render() {
@@ -78,7 +75,7 @@ class App extends React.Component {
         </CardDeck>
           <Directory />
         <CardDeck>
-          {this.renderCards}
+          {this.renderCards()}
         </CardDeck>
     </div>
     )

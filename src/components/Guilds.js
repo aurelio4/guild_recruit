@@ -20,7 +20,7 @@ class Guilds extends React.Component {
     }
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.checkUserLoggedIn()
   }
 
