@@ -22,12 +22,10 @@ class LoggedOut extends React.Component {
     this.toggleLoginModal = this.toggleLoginModal.bind(this)
     this.toggleRegisterModal = this.toggleRegisterModal.bind(this)
     this.checkPlayerData = this.checkPlayerData.bind(this)
-    this.getUsernames = this.getUsernames.bind(this)
 
     this.state = {
       loginModal: false,
       registerModal: false,
-      dbUsernames: [],
       username: '',
       usernameError: '',
       discord: '',
@@ -41,7 +39,6 @@ class LoggedOut extends React.Component {
   }
 
   componentDidMount() {
-    this.getUsernames()
   }
 
   login(e) {
@@ -72,17 +69,6 @@ class LoggedOut extends React.Component {
     this.setState({ [e.target.name]: e.target.value });
   }
 
-  getUsernames() {
-    Fire.firestore().collection('users')
-      .get().then(snapshot => {
-        snapshot.forEach(doc => {
-          this.state.dbUsernames.push(doc.data().username)
-          console.log(this.state.dbUsernames)
-          console.log(this.state.dbUsernames[1])
-        })
-      })
-  }
-
   checkPlayerData() {
     this.setState({
       usernameError: '',
@@ -103,8 +89,6 @@ class LoggedOut extends React.Component {
       this.setState({ usernameError: "Username is too long!" })
     } else if(this.state.username.length < 3) {
       this.setState({ usernameError: "Username is too short!" })
-    } else if(this.state.username.length > 3 && this.state.username.length < 14) {
-      
     } else {
       this.signup();
       this.toggleRegisterModal();
