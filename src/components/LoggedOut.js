@@ -41,14 +41,14 @@ class LoggedOut extends React.Component {
   componentDidMount() {
   }
 
-  login(e) {
+  login() {
     Fire.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
       .then((u) => {}).catch((error) => {
         console.log(error);
       })
   }
 
-  signup(e) {
+  signup() {
     Fire.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
       .then(() => {
         const userUid = Fire.auth().currentUser.uid

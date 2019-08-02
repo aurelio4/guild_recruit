@@ -14,9 +14,11 @@ class Guilds extends React.Component {
     super(props)
 
     this.checkUserLoggedIn = this.checkUserLoggedIn.bind(this)
+    this.getGuildOwnerUID = this.getGuildOwnerUID.bind(this)
 
     this.state = {
-      userLoggedIn: false
+      userLoggedIn: false,
+      GuildApplyOwnerUID: 0
     }
   }
 
@@ -34,6 +36,12 @@ class Guilds extends React.Component {
     })
   }
 
+  getGuildOwnerUID(e) {
+    const selectedIndex = e.target.options.selectedIndex;
+    this.setState({ GuildApplyOwnerUID: e.target.options[selectedIndex].getAttribute('key')})
+    console.log(this.state.GuildApplyOwnerUID)
+  }
+
   render() {
     return (
       <Col sm="4">
@@ -45,7 +53,7 @@ class Guilds extends React.Component {
             <hr className="hr-divider" />
             <CardText>{this.props.guildDesc}</CardText>
             {this.state.userLoggedIn
-            ? [<Button>Apply</Button>,<Button className="btn-spacing">Contact</Button>]
+            ? <Button onClick={this.getGuildOwnerUID}>Apply</Button>
             : " " }
           </CardBody>
         </Card>

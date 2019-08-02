@@ -31,12 +31,14 @@ class LoggedIn extends React.Component {
     this.updateUsername = this.updateUsername.bind(this)
     this.setUserProfile = this.setUserProfile.bind(this)
     this.deleteUserProfile = this.deleteUserProfile.bind(this)
+    this.deleteUserGuild = this.deleteUserGuild.bind(this)
     this.handleChange = this.handleChange.bind(this)
     this.getUserInfo = this.getUserInfo.bind(this)
     this.getUserEmail = this.getUserEmail.bind(this)
     this.toggleAddGuild = this.toggleAddGuild.bind(this)
     this.toggleManageGuild = this.toggleManageGuild.bind(this)
-    this.toggleDeleteModal = this.toggleDeleteModal.bind(this)
+    this.toggleDeleteProfileModal = this.toggleDeleteProfileModal.bind(this)
+    this.toggleDeleteGuildModal = this.toggleDeleteGuildModal.bind(this)
     this.addGuildToDB = this.addGuildToDB.bind(this)
     this.toggleRegionSelect = this.toggleRegionSelect.bind(this)
     this.toggleFactionSelect = this.toggleFactionSelect.bind(this)
@@ -53,7 +55,8 @@ class LoggedIn extends React.Component {
       profileModal: false,
       addGuildModal: false,
       manageGuildModal: false,
-      deleteModal: false,
+      deleteGuildModal: false,
+      deleteProfileModal: false,
       editDisabled: true,
       profileUsername: '',
       profileEmail: '',
@@ -139,9 +142,15 @@ class LoggedIn extends React.Component {
     }))
   }
 
-  toggleDeleteModal() {
+  toggleDeleteGuildModal() {
     this.setState(prevState => ({
-      deleteModal: !prevState.deleteModal
+      deleteGuildModal: !prevState.deleteGuildModal
+    }))
+  }
+
+  toggleDeleteProfileModal() {
+    this.setState(prevState => ({
+      deleteProfileModal: !prevState.deleteProfileModal
     }))
   }
 
@@ -279,6 +288,15 @@ class LoggedIn extends React.Component {
       })
     }
 
+  deleteUserGuild() {
+    Fire.firestore().collection('guilds').doc(this.state.profileUid).delete()
+      .then(() => {
+        console.log("Document deleted successfully")
+      }).catch(err => {
+        console.log("Error deleting document: ", err)
+      })
+  }
+
   addGuildToDB() {
     Fire.firestore().collection('guilds').doc(this.state.profileUid)
     .set({
@@ -411,13 +429,29 @@ class LoggedIn extends React.Component {
             </ModalBody>
           </Modal>
           {this.state.userHasGuild 
-          ? <DropdownItem> Show Applicants</DropdownItem>
+          ? [<DropdownItem> Show Applicants</DropdownItem>, 
+              <DropdownItem onClick={this.toggleDeleteGuildModal}>Delete Guild</DropdownItem>,
+              <Modal isOpen={this.state.deleteGuildModal} toggle={this.toggleDeleteGuildModal}>
+                <ModalBody>
+                  <span className="delete-font">
+                  Are you sure you want to permanently delete your guild? Doing so will delete the following:
+                    <ul className="no-dots">
+                      <li> - Guild</li>
+                      <li> - Guild Applications</li>
+                    </ul>
+                  </span>
+                </ModalBody>
+                <ModalFooter>
+                  <Button color="success" onClick={() => {this.deleteUserGuild(); this.toggleDeleteGuildModal()}}>Delete</Button>
+                  <Button color="danger" onClick={this.toggleDeleteGuildModal}>Nevermind</Button>
+                </ModalFooter>
+              </Modal>]
           : <DropdownItem> Show Applications</DropdownItem>}
           <DropdownItem divider />
-          <DropdownItem onClick={this.toggleDeleteModal}>
+          <DropdownItem onClick={this.toggleDeleteProfileModal}>
             Delete Account
           </DropdownItem>
-          <Modal isOpen={this.state.deleteModal} toggle={this.toggleDeleteModal}>
+          <Modal isOpen={this.state.deleteProfileModal} toggle={this.toggleDeleteProfileModal}>
             <ModalBody>
               <span className="delete-font">
                 Are you sure you want to permanently delete your account? Doing so will delete the following:
@@ -429,8 +463,8 @@ class LoggedIn extends React.Component {
               </span>
             </ModalBody>
             <ModalFooter>
-              <Button color="success" onClick={() => {this.deleteUserProfile(); this.toggleDeleteModal()}}>Delete</Button>
-              <Button color="danger" onClick={this.toggleDeleteModal}>Nevermind</Button>
+              <Button color="success" onClick={() => {this.deleteUserProfile(); this.toggleDeleteProfileModal()}}>Delete</Button>
+              <Button color="danger" onClick={this.toggleDeleteProfileModal}>Nevermind</Button>
             </ModalFooter>
           </Modal>
           <DropdownItem onClick={this.logout}>
