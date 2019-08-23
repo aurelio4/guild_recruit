@@ -46,7 +46,7 @@ class App extends React.Component {
               guildServer: doc.data().guildServer
             })
           })
-          this.setState({guilds}, () => console.log(this.state))
+          this.setState({guilds})
         })
   }
 
@@ -58,8 +58,7 @@ class App extends React.Component {
       } else if (guild.guildFaction === 'Horde') {
         guildFaction = 'guild-name -horde'
       }
-      console.log(guild)
-      return <Guilds key={guild.id} guildFaction={guildFaction} guildServer={guild.guildServer} guildName={guild.guildName} guildRegion={guild.guildRegion} guildDesc={guild.guildDesc} />
+      return <Guilds key={guild.id} id={guild.id} guildFaction={guildFaction} guildServer={guild.guildServer} guildName={guild.guildName} guildRegion={guild.guildRegion} guildDesc={guild.guildDesc} />
             })
             return <CardDeck>{guildComp}</CardDeck>
   }

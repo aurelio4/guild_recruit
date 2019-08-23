@@ -1,5 +1,6 @@
 import React from 'react'
 import Fire from './Fire'
+import servers from './servers.json'
 import {
   Badge,
   Button,
@@ -50,6 +51,8 @@ class LoggedIn extends React.Component {
     this.checkGuildData = this.checkGuildData.bind(this)
     this.ucFirst = this.ucFirst.bind(this)
     this.getGuildInfo = this.getGuildInfo.bind(this)
+    this.toggleServerSelect = this.toggleServerSelect.bind(this)
+    this.getServer = this.getServer.bind(this)
 
     this.state = {
       profileModal: false,
@@ -75,7 +78,8 @@ class LoggedIn extends React.Component {
       factionColor: 'secondary',
       regionSelect: false,
       factionSelect: false,
-      userHasGuild: false
+      userHasGuild: false,
+      serverSelect: false
     }
   }
 
@@ -163,6 +167,12 @@ class LoggedIn extends React.Component {
   toggleFactionSelect() {
     this.setState(prevState => ({
       factionSelect: !prevState.factionSelect
+    }))
+  }
+
+  toggleServerSelect() {
+    this.setState(prevState => ({
+      serverSelect: !prevState.serverSelect
     }))
   }
 
@@ -258,6 +268,20 @@ class LoggedIn extends React.Component {
       })
   }
 
+  getServer(e) {
+    var data = JSON.stringify(servers)
+    var serverList = JSON.parse(data)
+    var serverArray = []
+
+      serverList.map((lists) => {
+        serverArray.push(lists)
+      })
+    var clickedKey = e.target.id
+    var serverName = serverArray[clickedKey - 1]
+    this.setState({ guildServer: serverName.server })
+    console.log(this.state.guildServer)
+  }
+
   setUserProfile() {
     Fire.firestore().collection('users').doc(this.state.profileUid).set({
       username: this.state.profileUsername,
@@ -304,7 +328,8 @@ class LoggedIn extends React.Component {
       guildRegion: this.state.guildRegion + "-",
       guildServer: this.ucFirst(this.state.guildServer),
       guildDesc: this.ucFirst(this.state.guildDesc),
-      guildFaction: this.ucFirst(this.state.guildFaction)
+      guildFaction: this.ucFirst(this.state.guildFaction),
+      applicants: []
     }).then(() => {
       console.log("Successfully written to Firestore")
       this.toggleAddGuild()
@@ -359,7 +384,7 @@ class LoggedIn extends React.Component {
         <DropdownMenu right>
           {this.state.userHasGuild 
           ? <DropdownItem onClick={() => {this.getGuildInfo(); this.toggleManageGuild()}}> Manage Guild </DropdownItem>
-          : <DropdownItem onClick={this.toggleAddGuild}>Add Guild</DropdownItem>}
+          : <DropdownItem onClick={this.toggleAddGuild}>Create Guild</DropdownItem>}
           <Modal isOpen={this.state.manageGuildModal} toggle={this.toggleManageGuild}>
             <ModalBody>
               <Form>
@@ -413,7 +438,16 @@ class LoggedIn extends React.Component {
                       <DropdownItem onClick={this.setRegionUS}>US</DropdownItem>
                     </DropdownMenu>
                   </InputGroupButtonDropdown>
-                  <Input type="text" name="guildServer" value={this.state.guildServer} onChange={this.handleChange} placeholder="Server Name" />
+                  <InputGroupButtonDropdown addonType="append" isOpen={this.state.serverSelect} toggle={this.toggleServerSelect}>
+                    <DropdownToggle>
+                      {this.state.guildServer ? this.state.guildServer : "Server"}
+                    </DropdownToggle>
+                    <DropdownMenu>
+                      {servers.map((serverDetail) => {
+                        return <DropdownItem key={serverDetail.id} id={serverDetail.id} onClick={this.getServer}>{serverDetail.server}</DropdownItem>
+                      })}
+                    </DropdownMenu>
+                  </InputGroupButtonDropdown>
                 </InputGroup>
               </FormGroup>
               <FormGroup>
@@ -424,7 +458,7 @@ class LoggedIn extends React.Component {
                 </FormText>
               </FormGroup>
               <Button className="btn-float-r btn-spacing" color="secondary" onClick={this.toggleAddGuild}>Close</Button>
-              <Button className="btn-float-r" color="success" onClick={() => {if (this.state.successfulGuildLog) { this.checkGuildData() } else { this.checkGuildData(); }}}>Add</Button>
+              <Button className="btn-float-r" color="success" onClick={() => {if (this.state.successfulGuildLog) { this.checkGuildData(); window.location.reload() } else { this.checkGuildData(); }}}>Create</Button>
             </Form>
             </ModalBody>
           </Modal>
@@ -442,7 +476,7 @@ class LoggedIn extends React.Component {
                   </span>
                 </ModalBody>
                 <ModalFooter>
-                  <Button color="success" onClick={() => {this.deleteUserGuild(); this.toggleDeleteGuildModal()}}>Delete</Button>
+                  <Button color="success" onClick={() => {this.deleteUserGuild(); this.toggleDeleteGuildModal(); window.location.reload()}}>Delete</Button>
                   <Button color="danger" onClick={this.toggleDeleteGuildModal}>Nevermind</Button>
                 </ModalFooter>
               </Modal>]

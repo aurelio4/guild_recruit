@@ -1,0 +1,58 @@
+[
+	{
+		"id": 1,
+		"server": "Atiesh"
+	},
+	{
+		"id": 2,
+		"server": "Mankrik"
+	},
+	{
+		"id": 3,
+		"server": "Myzrael"
+	},
+	{
+		"id": 4,
+		"server": "Pagle"
+	},
+	{
+		"id": 5,
+		"server": "Faerlina"
+	},
+	{
+		"id": 6,
+		"server": "Fairbanks"
+	},
+	{
+		"id": 7,
+		"server": "Herod"
+	},
+	{
+		"id": 8,
+		"server": "Thalnos"
+	},
+	{
+		"id": 9,
+		"server": "Whitemane"
+	},
+	{
+		"id": 10,
+		"server": "Stalagg"
+	},
+	{
+		"id": 11,
+		"server": "Blaumeux"
+	},
+	{
+		"id": 12,
+		"server": "Skeram"
+	},
+	{
+		"id": 13,
+		"server": "Bloodsail Buccaneers"
+	},
+	{
+		"id": 14,
+		"server": "Grobbulus"
+	}
+]

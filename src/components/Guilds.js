@@ -14,11 +14,12 @@ class Guilds extends React.Component {
     super(props)
 
     this.checkUserLoggedIn = this.checkUserLoggedIn.bind(this)
-    this.getGuildOwnerUID = this.getGuildOwnerUID.bind(this)
+    this.applyUserToGuild = this.applyUserToGuild.bind(this)
 
     this.state = {
       userLoggedIn: false,
-      GuildApplyOwnerUID: 0
+      playerUid: '',
+      playerApplied: false
     }
   }
 
@@ -30,16 +31,22 @@ class Guilds extends React.Component {
     Fire.auth().onAuthStateChanged( user => {
       if(user) {
         this.setState({ userLoggedIn: true })
+        this.setState({ playerUid: Fire.auth().currentUser.uid})
       } else {
         this.setState({ userLoggedIn: false })
       }
     })
   }
 
-  getGuildOwnerUID(e) {
-    const selectedIndex = e.target.options.selectedIndex;
-    this.setState({ GuildApplyOwnerUID: e.target.options[selectedIndex].getAttribute('key')})
-    console.log(this.state.GuildApplyOwnerUID)
+  applyUserToGuild() {
+    var adminUid = this.props.id
+    var applicantUid = this.state.playerUid
+    var path = Fire.firestore().collection('guilds').doc(adminUid)
+    path.get().then(doc => {
+        if(doc.exists) {
+          path.update({ applicants: Fire.firestore.FieldValue.arrayUnion(applicantUid) })
+        }
+      })
   }
 
   render() {
@@ -53,7 +60,9 @@ class Guilds extends React.Component {
             <hr className="hr-divider" />
             <CardText>{this.props.guildDesc}</CardText>
             {this.state.userLoggedIn
-            ? <Button onClick={this.getGuildOwnerUID}>Apply</Button>
+            ? this.state.playerApplied 
+              ? <Button disabled>Applied</Button>
+              : <Button onClick={this.applyUserToGuild}>Apply</Button>
             : " " }
           </CardBody>
         </Card>
