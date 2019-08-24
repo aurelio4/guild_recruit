@@ -273,6 +273,7 @@ class LoggedIn extends React.Component {
     var serverList = JSON.parse(data)
     var serverArray = []
 
+      // eslint-disable-next-line array-callback-return
       serverList.map((lists) => {
         serverArray.push(lists)
       })

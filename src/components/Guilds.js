@@ -15,23 +15,23 @@ class Guilds extends React.Component {
 
     this.checkUserLoggedIn = this.checkUserLoggedIn.bind(this)
     this.applyUserToGuild = this.applyUserToGuild.bind(this)
+    this.getUserAppliedGuilds = this.getUserAppliedGuilds.bind(this)
 
     this.state = {
       userLoggedIn: false,
-      playerUid: '',
-      playerApplied: false
+      playerUid: Fire.auth().currentUser.uid
     }
   }
 
   componentDidMount() {
     this.checkUserLoggedIn()
+    this.getUserAppliedGuilds()
   }
 
   checkUserLoggedIn() {
     Fire.auth().onAuthStateChanged( user => {
       if(user) {
         this.setState({ userLoggedIn: true })
-        this.setState({ playerUid: Fire.auth().currentUser.uid})
       } else {
         this.setState({ userLoggedIn: false })
       }
@@ -42,11 +42,26 @@ class Guilds extends React.Component {
     var adminUid = this.props.id
     var applicantUid = this.state.playerUid
     var path = Fire.firestore().collection('guilds').doc(adminUid)
+    
     path.get().then(doc => {
         if(doc.exists) {
           path.update({ applicants: Fire.firestore.FieldValue.arrayUnion(applicantUid) })
-        }
+        } else { console.log("No such document!") }
+    })
+  }
+
+  getUserAppliedGuilds() {
+    var pathNoDoc = Fire.firestore().collection('guilds')
+    var query = pathNoDoc.where('applicants', 'array-contains', this.state.playerUid)
+    var guildsAppliedTo = []
+
+    query.get().then(snapshot => {
+      snapshot.docs.forEach(doc => {
+        if(doc.exists) {
+          guildsAppliedTo.push(doc.id)
+        } else { console.log("Not applied to any guilds!") }
       })
+    })
   }
 
   render() {
@@ -59,11 +74,7 @@ class Guilds extends React.Component {
             <CardSubtitle className="ras text-muted">{this.props.guildServer}</CardSubtitle>
             <hr className="hr-divider" />
             <CardText>{this.props.guildDesc}</CardText>
-            {this.state.userLoggedIn
-            ? this.state.playerApplied 
-              ? <Button disabled>Applied</Button>
-              : <Button onClick={this.applyUserToGuild}>Apply</Button>
-            : " " }
+            <Button onClick={this.applyUserToGuild}>Apply</Button>
           </CardBody>
         </Card>
       </Col>
