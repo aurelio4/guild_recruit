@@ -19,7 +19,7 @@ class Guilds extends React.Component {
 
     this.state = {
       userLoggedIn: false,
-      playerUid: Fire.auth().currentUser.uid
+      playerUid: ''
     }
   }
 
@@ -32,6 +32,7 @@ class Guilds extends React.Component {
     Fire.auth().onAuthStateChanged( user => {
       if(user) {
         this.setState({ userLoggedIn: true })
+        this.setState({ playerUid: Fire.auth().currentUser.uid })
       } else {
         this.setState({ userLoggedIn: false })
       }
@@ -62,6 +63,8 @@ class Guilds extends React.Component {
         } else { console.log("Not applied to any guilds!") }
       })
     })
+
+    console.log(guildsAppliedTo)
   }
 
   render() {
