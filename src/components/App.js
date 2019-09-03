@@ -43,7 +43,8 @@ class App extends React.Component {
               guildFaction: doc.data().guildFaction,
               guildName: doc.data().guildName,
               guildRegion: doc.data().guildRegion,
-              guildServer: doc.data().guildServer
+              guildServer: doc.data().guildServer,
+              guildMaster: doc.data().guildMaster
             })
           })
           this.setState({guilds})
@@ -61,7 +62,7 @@ class App extends React.Component {
         guildFaction = 'guild-name -horde'
         gmGuildFaction = 'gm-link-text -horde'
       }
-      return <Guilds key={guild.id} id={guild.id} guildFaction={guildFaction} guildServer={guild.guildServer} guildName={guild.guildName} gmStyle={gmGuildFaction} guildRegion={guild.guildRegion} guildDesc={guild.guildDesc} />
+      return <Guilds key={guild.id} id={guild.id} guildMaster={guild.guildMaster} guildFaction={guildFaction} guildServer={guild.guildServer} guildName={guild.guildName} gmStyle={gmGuildFaction} guildRegion={guild.guildRegion} guildDesc={guild.guildDesc} />
             })
             return <CardDeck>{guildComp}</CardDeck>
   }

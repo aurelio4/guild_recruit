@@ -36,7 +36,6 @@ class Guilds extends React.Component {
   componentDidMount() {
     this.checkUserLoggedIn()
     this.getUserAppliedGuilds()
-    this.getGuildMaster()
   }
 
   checkUserLoggedIn() {
@@ -83,23 +82,6 @@ class Guilds extends React.Component {
     }
   }
 
-  getGuildMaster(a) {
-    var gmId = this.props.id
-    var path = Fire.firestore().collection('users').doc(gmId)
-    var guildMasters = []
-    path.get().then(doc => {
-      if(doc.exists) {
-        var data = JSON.stringify(doc.data())
-        var gms = JSON.parse(data)
-        guildMasters.push(gms.username)
-        guildMasters.push(doc.id)
-      }
-    })
-  }
-
-  setGuildMaster() {
-  }
-
   togglePublicProfile() {
     this.setState(prevState => ({
       publicProfileModal: !prevState.publicProfileModal
@@ -116,7 +98,7 @@ class Guilds extends React.Component {
               <CardSubtitle className="ras text-muted">{this.props.guildServer}</CardSubtitle>
               <CardSubtitle className="gm-spacing">
                 <span className="text-muted">GM: </span>
-                <a id={this.props.id} href="#" onClick={() => {this.togglePublicProfile(); return false;}} className={this.props.gmStyle}>chelkuhs AKA snackpack</a>
+                <a id={this.props.id} href="#" onClick={() => {this.togglePublicProfile(); return false;}} className={this.props.gmStyle}>{this.props.guildMaster}</a>
               </CardSubtitle>
               <Modal isOpen={this.state.publicProfileModal} toggle={this.togglePublicProfile}>
                 <ModalBody>

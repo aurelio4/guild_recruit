@@ -325,6 +325,7 @@ class LoggedIn extends React.Component {
   addGuildToDB() {
     Fire.firestore().collection('guilds').doc(this.state.profileUid)
     .set({
+      guildMaster: this.state.profileUsername,
       guildName: this.state.guildName,
       guildRegion: this.state.guildRegion + "-",
       guildServer: this.ucFirst(this.state.guildServer),
