@@ -54,5 +54,65 @@
 	{
 		"id": 14,
 		"server": "Grobbulus"
+	},
+	{
+		"id": 15,
+		"server": "Ashkandi"
+	},
+	{
+		"id": 16,
+		"server": "Azuresong"
+	},
+	{
+		"id": 17,
+		"server": "Westfall"
+	},
+	{
+		"id": 18,
+		"server": "Windseeker"
+	},
+	{
+		"id": 19,
+		"server": "Bigglesworth"
+	},
+	{
+		"id": 20,
+		"server": "Benediction"
+	},
+	{
+		"id": 21,
+		"server": "Incendius"
+	},
+	{
+		"id": 22,
+		"server": "Kirtonos"
+	},
+	{
+		"id": 23,
+		"server": "Kurinaxx"
+	},
+	{
+		"id": 24,
+		"server": "Kromcrush"
+	},
+	{
+		"id": 25,
+		"server": "Rattlegore"
+	},
+	{
+		"id": 26,
+		"server": "Smolderweb"
+	},
+	{
+		"id": 27,
+		"server": "Sulfuras"
+	},
+	{
+		"id": 28,
+		"server": "Thunderfury"
+	},
+	{
+		"id": 29,
+		"server": "Deviant Delight"
 	}
 ]

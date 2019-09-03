@@ -19,7 +19,9 @@ class Guilds extends React.Component {
 
     this.state = {
       userLoggedIn: false,
-      playerUid: ''
+      playerUid: '',
+      didPlayerApply: 'Apply',
+      buttonDisabled: false
     }
   }
 
@@ -52,8 +54,8 @@ class Guilds extends React.Component {
   }
 
   getUserAppliedGuilds() {
-    var pathNoDoc = Fire.firestore().collection('guilds')
-    var query = pathNoDoc.where('applicants', 'array-contains', this.state.playerUid)
+    var path = Fire.firestore().collection('guilds')
+    var query = path.where('applicants', 'array-contains', this.state.playerUid)
     var guildsAppliedTo = []
 
     query.get().then(snapshot => {
@@ -64,7 +66,12 @@ class Guilds extends React.Component {
       })
     })
 
-    console.log(guildsAppliedTo)
+    for(var i = 0; i > guildsAppliedTo.length; i++) {
+      if(guildsAppliedTo[i] === this.state.playerUid) {
+        this.setState({ didPlayerApply: 'Applied' })
+        this.setState({ buttonDisabled: true })
+      }
+    }
   }
 
   render() {
@@ -75,9 +82,10 @@ class Guilds extends React.Component {
             <CardTitle className={this.props.guildFaction}>{this.props.guildName}</CardTitle>
             <CardSubtitle className="ras text-muted">{this.props.guildRegion}</CardSubtitle>
             <CardSubtitle className="ras text-muted">{this.props.guildServer}</CardSubtitle>
+            <CardSubtitle className="guild-master"><span className="text-muted">GM: </span><a href="" className="">chelkuhs AKA snackpack</a></CardSubtitle>
             <hr className="hr-divider" />
             <CardText>{this.props.guildDesc}</CardText>
-            <Button onClick={this.applyUserToGuild}>Apply</Button>
+            <Button id={this.props.id} onClick={this.applyUserToGuild} disabled={this.state.buttonDisabled}>{this.state.didPlayerApply}</Button>
           </CardBody>
         </Card>
       </Col>
