@@ -38,7 +38,7 @@
 }
 
 .ras {
-  display: inline;
+  display: inline-block;
 }
 
 .hr-divider {
@@ -59,6 +59,14 @@
 
 .badge-spacing {
   margin-bottom: .5vh;
+}
+
+.gm-spacing {
+  font-size: 1.1em;
+}
+
+.gm-link-text {
+  text-decoration: none !important;
 }
 
 .guild-title-font {

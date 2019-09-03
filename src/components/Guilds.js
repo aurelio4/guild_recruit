@@ -7,7 +7,13 @@ import {
   CardTitle,
   CardSubtitle,
   Button,
-  Col } from 'reactstrap'
+  Col,
+  Modal,
+  ModalBody,
+  Form,
+  FormGroup,
+  Label,
+  Input } from 'reactstrap'
 
 class Guilds extends React.Component {
   constructor(props) {
@@ -16,9 +22,11 @@ class Guilds extends React.Component {
     this.checkUserLoggedIn = this.checkUserLoggedIn.bind(this)
     this.applyUserToGuild = this.applyUserToGuild.bind(this)
     this.getUserAppliedGuilds = this.getUserAppliedGuilds.bind(this)
+    this.togglePublicProfile = this.togglePublicProfile.bind(this)
 
     this.state = {
       userLoggedIn: false,
+      publicProfileModal: false,
       playerUid: '',
       didPlayerApply: 'Apply',
       buttonDisabled: false
@@ -28,6 +36,7 @@ class Guilds extends React.Component {
   componentDidMount() {
     this.checkUserLoggedIn()
     this.getUserAppliedGuilds()
+    this.getGuildMaster()
   }
 
   checkUserLoggedIn() {
@@ -74,21 +83,66 @@ class Guilds extends React.Component {
     }
   }
 
+  getGuildMaster(a) {
+    var gmId = this.props.id
+    var path = Fire.firestore().collection('users').doc(gmId)
+    var guildMasters = []
+    path.get().then(doc => {
+      if(doc.exists) {
+        var data = JSON.stringify(doc.data())
+        var gms = JSON.parse(data)
+        guildMasters.push(gms.username)
+        guildMasters.push(doc.id)
+      }
+    })
+  }
+
+  setGuildMaster() {
+  }
+
+  togglePublicProfile() {
+    this.setState(prevState => ({
+      publicProfileModal: !prevState.publicProfileModal
+    }))
+  }
+
   render() {
     return (
-      <Col sm="4">
-        <Card body inverse className="the-boxes" style={{ backgroundColor: '#333', borderColor: '#FFF' }}>
-          <CardBody className="guild-box">
-            <CardTitle className={this.props.guildFaction}>{this.props.guildName}</CardTitle>
-            <CardSubtitle className="ras text-muted">{this.props.guildRegion}</CardSubtitle>
-            <CardSubtitle className="ras text-muted">{this.props.guildServer}</CardSubtitle>
-            <CardSubtitle className="guild-master"><span className="text-muted">GM: </span><a href="" className="">chelkuhs AKA snackpack</a></CardSubtitle>
-            <hr className="hr-divider" />
-            <CardText>{this.props.guildDesc}</CardText>
-            <Button id={this.props.id} onClick={this.applyUserToGuild} disabled={this.state.buttonDisabled}>{this.state.didPlayerApply}</Button>
-          </CardBody>
-        </Card>
-      </Col>
+        <Col sm="4">
+          <Card body inverse className="the-boxes" style={{ backgroundColor: '#333', borderColor: '#FFF' }}>
+            <CardBody className="guild-box">
+              <CardTitle className={this.props.guildFaction}>{this.props.guildName}</CardTitle>
+              <CardSubtitle className="ras text-muted">{this.props.guildRegion}</CardSubtitle>
+              <CardSubtitle className="ras text-muted">{this.props.guildServer}</CardSubtitle>
+              <CardSubtitle className="gm-spacing">
+                <span className="text-muted">GM: </span>
+                <a id={this.props.id} href="#" onClick={() => {this.togglePublicProfile(); return false;}} className={this.props.gmStyle}>chelkuhs AKA snackpack</a>
+              </CardSubtitle>
+              <Modal isOpen={this.state.publicProfileModal} toggle={this.togglePublicProfile}>
+                <ModalBody>
+                  <Form>
+                    <FormGroup>
+                        <Label style={{ color: '#000' }} for="username">Username</Label>
+                        <Input type="username" name="playerUsername" value={this.state.playerUsername} disabled/>
+                    </FormGroup>
+                    <FormGroup>
+                      <Label style={{ color: '#000' }} for="email">Guild</Label>
+                      <Input type="text" name="guild" value={this.state.playerGuild} disabled />
+                    </FormGroup>
+                    <FormGroup>
+                      <Label style={{ color: '#000' }} for="discord">Discord</Label>
+                      <Input type="text" name="playerDiscord" value={this.state.playerDiscord} disabled/>
+                    </FormGroup>
+                    <Button className="btn-float-r btn-spacing" color="secondary" onClick={this.togglePublicProfile}>Close</Button>
+                  </Form>
+                </ModalBody>
+              </Modal>
+              <hr className="hr-divider" />
+              <CardText>{this.props.guildDesc}</CardText>
+              <Button id={this.props.id} onClick={this.applyUserToGuild} disabled={this.state.buttonDisabled}>{this.state.didPlayerApply}</Button>
+            </CardBody>
+          </Card>
+        </Col>
     )
   }
 }

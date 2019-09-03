@@ -52,13 +52,16 @@ class App extends React.Component {
 
   renderCards() {
     var guildFaction
+    var gmGuildFaction
     var guildComp = this.state.guilds.map(guild => {
       if(guild.guildFaction === 'Alliance') {
         guildFaction = 'guild-name -alliance'
+        gmGuildFaction = 'gm-link-text -alliance'
       } else if (guild.guildFaction === 'Horde') {
         guildFaction = 'guild-name -horde'
+        gmGuildFaction = 'gm-link-text -horde'
       }
-      return <Guilds key={guild.id} id={guild.id} guildFaction={guildFaction} guildServer={guild.guildServer} guildName={guild.guildName} guildRegion={guild.guildRegion} guildDesc={guild.guildDesc} />
+      return <Guilds key={guild.id} id={guild.id} guildFaction={guildFaction} guildServer={guild.guildServer} guildName={guild.guildName} gmStyle={gmGuildFaction} guildRegion={guild.guildRegion} guildDesc={guild.guildDesc} />
             })
             return <CardDeck>{guildComp}</CardDeck>
   }
