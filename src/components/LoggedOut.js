@@ -50,9 +50,8 @@ class LoggedOut extends React.Component {
 
   signup() {
     Fire.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
-      .then(() => {
-        const userUid = Fire.auth().currentUser.uid
-        this.setState({ uid: userUid })
+      .then(res => {
+        this.setState({ uid: res.user.uid })
         Fire.firestore().collection('users').doc(this.state.uid).set({
           username: this.state.username,
           discord: this.state.discord,
@@ -62,6 +61,20 @@ class LoggedOut extends React.Component {
         }).catch((error) => {
           console.log(error);
         })
+      })
+      .catch((err) => {
+        const errorCode = err.code;
+        switch(errorCode) {
+          case 'auth/weak-password': {
+            this.setState({ passwordError: "The password is too weak" })    
+            break;        
+          }
+          // Other errors here...
+          default: {
+            // Handle the scenario where an unexpected error occurs -- maybe a badge for "unexpected error" 
+            // at the top of the modal?
+          }
+        }
       })
   }
 
@@ -91,7 +104,6 @@ class LoggedOut extends React.Component {
       this.setState({ usernameError: "Username is too short!" })
     } else {
       this.signup();
-      this.toggleRegisterModal();
     }
   }
 
@@ -108,6 +120,8 @@ class LoggedOut extends React.Component {
   }
 
   render() {
+    // This function is too thicc. Too many components in one file, break these out.
+    // For example, the RegisterModal and LoginModal should be there own components, at minimum.
     return([
       <NavItem>
         <NavLink href="#" onClick={this.toggleRegisterModal}> Register </NavLink>
