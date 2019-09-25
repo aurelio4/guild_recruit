@@ -14,6 +14,7 @@ class Directory extends React.Component {
     super(props)
     this.toggleNav = this.toggleNav.bind(this)
     this.authListener = this.authListener.bind(this)
+    this.renderLoginOptions = this.renderLoginOptions.bind(this);
     this.state = {
       isOpen: false,
       user: {}
@@ -39,15 +40,18 @@ class Directory extends React.Component {
       }
   })}
 
+  renderLoginOptions() {
+    // A user is logged in if the user object exists in the state 
+    return this.state.user ? <LoggedIn /> : <LoggedOut />
+  }
+
   render() {
     return (
       <Navbar className="main-nav" color="dark" dark expand="md" sticky="top">
         <NavbarToggler onClick={this.toggleNav} />
         <Collapse isOpen={this.state.isOpen} navbar>
           <Nav className="ml-auto" navbar>
-          {this.state.user
-          ?  <LoggedIn />
-          :  <LoggedOut />}
+          {this.renderLoginOptions()}
           </Nav>
         </Collapse>
       </Navbar>

@@ -15,6 +15,8 @@ import {
   Label,
   Input } from 'reactstrap'
 
+// Yoo bro mad misleading that this class is a card for a singular Guild 
+// but you named it plural Guilds :thinking: make the code easy for strangers to read
 class Guilds extends React.Component {
   constructor(props) {
     super(props)
@@ -57,10 +59,19 @@ class Guilds extends React.Component {
     path.get().then(doc => {
         if(doc.exists) {
           path.update({ applicants: Fire.firestore.FieldValue.arrayUnion(applicantUid) })
+            .then(() => {
+              // at this point they've applied
+              this.setState({ 
+                didPlayerApply: 'Applied',
+                buttonDisabled: true,
+               })
+               // ^ btw you can update multiple fields in the state in one call like that
+            });
         } else { console.log("No such document!") }
     })
   }
 
+  // Confusing that you're doing logic across all guild cards in a component that only displays one guild
   getUserAppliedGuilds() {
     var path = Fire.firestore().collection('guilds')
     var query = path.where('applicants', 'array-contains', this.state.playerUid)
