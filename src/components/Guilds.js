@@ -17,13 +17,13 @@ import {
 
 // Yoo bro mad misleading that this class is a card for a singular Guild 
 // but you named it plural Guilds :thinking: make the code easy for strangers to read
+
 class Guilds extends React.Component {
   constructor(props) {
     super(props)
 
-    this.checkUserLoggedIn = this.checkUserLoggedIn.bind(this)
+    this.getUserInfo = this.getUserInfo.bind(this)
     this.applyUserToGuild = this.applyUserToGuild.bind(this)
-    this.getUserAppliedGuilds = this.getUserAppliedGuilds.bind(this)
     this.togglePublicProfile = this.togglePublicProfile.bind(this)
 
     this.state = {
@@ -36,11 +36,11 @@ class Guilds extends React.Component {
   }
 
   componentDidMount() {
-    this.checkUserLoggedIn()
-    this.getUserAppliedGuilds()
+    this.getUserInfo()
   }
 
-  checkUserLoggedIn() {
+  getUserInfo() {
+    // set user login
     Fire.auth().onAuthStateChanged( user => {
       if(user) {
         this.setState({ userLoggedIn: true })
@@ -49,6 +49,19 @@ class Guilds extends React.Component {
         this.setState({ userLoggedIn: false })
       }
     })
+    
+    // check for guilds applied to
+    var path = Fire.firestore().collection('guilds')
+    var query = path.where("applicants", "array-contains", this.state.playerUid)
+    
+    query.get().then(snapshot => {
+      snapshot.forEach(doc => {
+        console.log(doc.id, "=>", doc.data());
+      })
+    }).catch(err => {
+      console.log("Error fetching: ", err)
+    })
+
   }
 
   applyUserToGuild() {
@@ -65,32 +78,9 @@ class Guilds extends React.Component {
                 didPlayerApply: 'Applied',
                 buttonDisabled: true,
                })
-               // ^ btw you can update multiple fields in the state in one call like that
             });
         } else { console.log("No such document!") }
     })
-  }
-
-  // Confusing that you're doing logic across all guild cards in a component that only displays one guild
-  getUserAppliedGuilds() {
-    var path = Fire.firestore().collection('guilds')
-    var query = path.where('applicants', 'array-contains', this.state.playerUid)
-    var guildsAppliedTo = []
-
-    query.get().then(snapshot => {
-      snapshot.docs.forEach(doc => {
-        if(doc.exists) {
-          guildsAppliedTo.push(doc.id)
-        } else { console.log("Not applied to any guilds!") }
-      })
-    })
-
-    for(var i = 0; i > guildsAppliedTo.length; i++) {
-      if(guildsAppliedTo[i] === this.state.playerUid) {
-        this.setState({ didPlayerApply: 'Applied' })
-        this.setState({ buttonDisabled: true })
-      }
-    }
   }
 
   togglePublicProfile() {

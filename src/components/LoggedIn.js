@@ -478,7 +478,7 @@ class LoggedIn extends React.Component {
                   </span>
                 </ModalBody>
                 <ModalFooter>
-                  <Button color="success" onClick={() => {this.deleteUserGuild(); this.toggleDeleteGuildModal(); window.location.reload()}}>Delete</Button>
+                  <Button color="success" onClick={() => {this.deleteUserGuild(); this.toggleDeleteGuildModal()}}>Delete</Button>
                   <Button color="danger" onClick={this.toggleDeleteGuildModal}>Nevermind</Button>
                 </ModalFooter>
               </Modal>]
