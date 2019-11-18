@@ -18,7 +18,7 @@ import {
 // Yoo bro mad misleading that this class is a card for a singular Guild 
 // but you named it plural Guilds :thinking: make the code easy for strangers to read
 
-class Guilds extends React.Component {
+class GuildCard extends React.Component {
   constructor(props) {
     super(props)
 
@@ -130,4 +130,4 @@ class Guilds extends React.Component {
   }
 }
 
-export default Guilds
+export default GuildCard

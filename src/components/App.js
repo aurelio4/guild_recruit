@@ -1,5 +1,5 @@
 import React from 'react'
-import Guilds from './Guilds'
+import GuildCard from './GuildCard'
 import Directory from './Directory'
 import Fire from './Fire'
 import { CardDeck } from 'reactstrap'
@@ -62,7 +62,7 @@ class App extends React.Component {
         guildFaction = 'guild-name -horde'
         gmGuildFaction = 'gm-link-text -horde'
       }
-      return <Guilds key={guild.id} id={guild.id} guildMaster={guild.guildMaster} guildFaction={guildFaction} guildServer={guild.guildServer} guildName={guild.guildName} gmStyle={gmGuildFaction} guildRegion={guild.guildRegion} guildDesc={guild.guildDesc} />
+      return <GuildCard key={guild.id} id={guild.id} guildMaster={guild.guildMaster} guildFaction={guildFaction} guildServer={guild.guildServer} guildName={guild.guildName} gmStyle={gmGuildFaction} guildRegion={guild.guildRegion} guildDesc={guild.guildDesc} />
             })
             return <CardDeck>{guildComp}</CardDeck>
   }

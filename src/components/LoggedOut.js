@@ -1,16 +1,9 @@
 import React from 'react'
-import Fire from './Fire'
 import RegisterModal from './RegisterModal'
 import LoginModal from './LoginModal'
 import {
   NavItem,
-  NavLink,
-  Button,
-  Modal,
-  ModalBody,
-  Input,
-  FormGroup,
-  Form } from 'reactstrap'
+  NavLink } from 'reactstrap'
 
 class LoggedOut extends React.Component {
   constructor(props) {
