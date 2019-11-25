@@ -40,7 +40,7 @@ class LoginModal extends React.Component {
 
     render() {
         return (
-        <Modal isOpen={this.props.isShow} toggle={this.props.toggleLoginModal}>
+        <Modal isOpen={this.props.isShow} toggle={this.sendData}>
         <ModalBody>
           <Form>
             <FormGroup>

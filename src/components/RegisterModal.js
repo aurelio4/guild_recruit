@@ -52,15 +52,13 @@ class RegisterModal extends React.Component {
           .catch((err) => {
             const errorCode = err.code;
             switch(errorCode) {
-              case 'auth/weak-password': {
+              case 'auth/weak-password':
                 this.setState({ passwordError: "The password is too weak" })    
-                break;        
-              }
+                break;    
               // Other errors here...
-              default: {
+              default:
                 // Handle the scenario where an unexpected error occurs -- maybe a badge for "unexpected error" 
                 // at the top of the modal?
-              }
             }
           })
     }

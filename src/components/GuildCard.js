@@ -1,5 +1,6 @@
 import React from 'react'
 import Fire from './Fire'
+import PublicProfileModal from './PublicProfileModal'
 import {
   Card,
   CardText,
@@ -7,16 +8,7 @@ import {
   CardTitle,
   CardSubtitle,
   Button,
-  Col,
-  Modal,
-  ModalBody,
-  Form,
-  FormGroup,
-  Label,
-  Input } from 'reactstrap'
-
-// Yoo bro mad misleading that this class is a card for a singular Guild 
-// but you named it plural Guilds :thinking: make the code easy for strangers to read
+  Col } from 'reactstrap'
 
 class GuildCard extends React.Component {
   constructor(props) {
@@ -25,6 +17,7 @@ class GuildCard extends React.Component {
     this.getUserInfo = this.getUserInfo.bind(this)
     this.applyUserToGuild = this.applyUserToGuild.bind(this)
     this.togglePublicProfile = this.togglePublicProfile.bind(this)
+    this.closePublicProfileModal = this.closePublicProfileModal.bind(this)
 
     this.state = {
       userLoggedIn: false,
@@ -40,15 +33,21 @@ class GuildCard extends React.Component {
   }
 
   getUserInfo() {
-    // set user login
+    // get user login status
+
+    // set user login, ON LOGIN
     Fire.auth().onAuthStateChanged( user => {
       if(user) {
-        this.setState({ userLoggedIn: true })
-        this.setState({ playerUid: Fire.auth().currentUser.uid })
+        this.setState({ 
+          userLoggedIn: true,
+          playerUid: Fire.auth().currentUser.uid
+         })
       } else {
         this.setState({ userLoggedIn: false })
       }
     })
+
+    console.log(this.state.userLoggedIn)
     
     // check for guilds applied to
     var path = Fire.firestore().collection('guilds')
@@ -61,7 +60,6 @@ class GuildCard extends React.Component {
     }).catch(err => {
       console.log("Error fetching: ", err)
     })
-
   }
 
   applyUserToGuild() {
@@ -89,6 +87,10 @@ class GuildCard extends React.Component {
     }))
   }
 
+  closePublicProfileModal(data) {
+    this.setState({ publicProfileModal: data })
+  }
+
   render() {
     return (
         <Col sm="4">
@@ -101,25 +103,7 @@ class GuildCard extends React.Component {
                 <span className="text-muted">GM: </span>
                 <a id={this.props.id} href="#" onClick={() => {this.togglePublicProfile(); return false;}} className={this.props.gmStyle}>{this.props.guildMaster}</a>
               </CardSubtitle>
-              <Modal isOpen={this.state.publicProfileModal} toggle={this.togglePublicProfile}>
-                <ModalBody>
-                  <Form>
-                    <FormGroup>
-                        <Label style={{ color: '#000' }} for="username">Username</Label>
-                        <Input type="username" name="playerUsername" value={this.state.playerUsername} disabled/>
-                    </FormGroup>
-                    <FormGroup>
-                      <Label style={{ color: '#000' }} for="email">Guild</Label>
-                      <Input type="text" name="guild" value={this.state.playerGuild} disabled />
-                    </FormGroup>
-                    <FormGroup>
-                      <Label style={{ color: '#000' }} for="discord">Discord</Label>
-                      <Input type="text" name="playerDiscord" value={this.state.playerDiscord} disabled/>
-                    </FormGroup>
-                    <Button className="btn-float-r btn-spacing" color="secondary" onClick={this.togglePublicProfile}>Close</Button>
-                  </Form>
-                </ModalBody>
-              </Modal>
+              <PublicProfileModal key="ppModal" callback={this.closePublicProfileModal} isShow={this.state.publicProfileModal} />
               <hr className="hr-divider" />
               <CardText>{this.props.guildDesc}</CardText>
               <Button id={this.props.id} onClick={this.applyUserToGuild} disabled={this.state.buttonDisabled}>{this.state.didPlayerApply}</Button>
