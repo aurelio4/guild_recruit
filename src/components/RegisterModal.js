@@ -94,7 +94,7 @@ class RegisterModal extends React.Component {
 
     render() {
         return (
-        <Modal isOpen={this.props.isShow} toggle={this.props.toggleRegisterModal}>
+        <Modal isOpen={this.props.isShow} toggle={this.sendData}>
           <ModalBody>
             <Form>
               <FormGroup>
