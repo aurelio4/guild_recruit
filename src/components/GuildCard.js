@@ -33,9 +33,6 @@ class GuildCard extends React.Component {
   }
 
   getUserInfo() {
-    // get user login status
-
-    // set user login, ON LOGIN
     Fire.auth().onAuthStateChanged( user => {
       if(user) {
         this.setState({ 
@@ -106,7 +103,9 @@ class GuildCard extends React.Component {
               <PublicProfileModal key="ppModal" callback={this.closePublicProfileModal} isShow={this.state.publicProfileModal} />
               <hr className="hr-divider" />
               <CardText>{this.props.guildDesc}</CardText>
-              <Button id={this.props.id} onClick={this.applyUserToGuild} disabled={this.state.buttonDisabled}>{this.state.didPlayerApply}</Button>
+              {this.state.userLoggedIn 
+                ? <Button id={this.props.id} onClick={this.applyUserToGuild} disabled={this.state.buttonDisabled}>{this.state.didPlayerApply}</Button>
+                : <div></div> }
             </CardBody>
           </Card>
         </Col>
