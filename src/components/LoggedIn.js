@@ -1,16 +1,14 @@
 import React from 'react'
 import Fire from './Fire'
 import ProfileModal from './ProfileModal'
-import ManageGuildModal from './ManageGuildModal'
 import AddGuildModal from './AddGuildModal'
+import ManageGuildModal from './ManageGuildModal'
+import DeleteGuildModal from './DeleteGuildModal'
+import DeleteProfileModal from './DeleteProfileModal'
 import {
-  Button,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-  Modal,
-  ModalBody,
-  ModalFooter,
   NavLink,
   NavItem,
   UncontrolledDropdown
@@ -22,8 +20,6 @@ class LoggedIn extends React.Component {
     this.logout = this.logout.bind(this)
     this.toggleProfile = this.toggleProfile.bind(this)
     this.updateUsername = this.updateUsername.bind(this)
-    this.deleteUserProfile = this.deleteUserProfile.bind(this)
-    this.deleteUserGuild = this.deleteUserGuild.bind(this)
     this.handleChange = this.handleChange.bind(this)
     this.getUserEmail = this.getUserEmail.bind(this)
     this.toggleAddGuild = this.toggleAddGuild.bind(this)
@@ -35,6 +31,8 @@ class LoggedIn extends React.Component {
     this.closeProfileModal = this.closeProfileModal.bind(this)
     this.closeManageGuildModal = this.closeManageGuildModal.bind(this)
     this.closeAddGuildModal = this.closeAddGuildModal.bind(this)
+    this.closeDeleteGuildModal = this.closeDeleteGuildModal.bind(this)
+    this.closeDeleteProfileModal = this.closeDeleteProfileModal.bind(this)
 
     this.state = {
       profileUid: '',
@@ -116,6 +114,14 @@ class LoggedIn extends React.Component {
     this.setState({ addGuildModal: false })
   }
 
+  closeDeleteGuildModal() {
+    this.setState({ deleteGuildModal: false })
+  }
+
+  closeDeleteProfileModal() {
+    this.setState({ deleteProfileModal: false })
+  }
+
   getUserEmail() {
     Fire.auth().onAuthStateChanged( user => {
       if(user) {
@@ -164,34 +170,6 @@ class LoggedIn extends React.Component {
       })
   }
 
-  deleteUserProfile() {
-    var canDelete = false
-    Fire.firestore().collection('users').doc(this.state.profileUid).delete()
-      .then(() => {
-        console.log("Document deleted successfully")
-        canDelete = true;
-        if(canDelete) {
-          Fire.auth().currentUser.delete().then(() => {
-            console.log("User deleted successfully")
-          }).catch(err => {
-            console.log("Error deleting user: ", err)
-          })
-        }
-      }).catch(err => {
-        console.log("Error deleting document: ", err)
-      })
-    }
-
-  deleteUserGuild() {
-    Fire.firestore().collection('guilds').doc(this.state.profileUid).delete()
-      .then(() => {
-        console.log("Document deleted successfully")
-        window.location.reload()
-      }).catch(err => {
-        console.log("Error deleting document: ", err)
-      })
-  }
-
   render() {
     return ([
       <NavItem>
@@ -206,6 +184,7 @@ class LoggedIn extends React.Component {
           {this.state.userHasGuild 
           ? <DropdownItem onClick={() => {this.toggleManageGuild(); this.getGuildInfo()}}> Manage Guild </DropdownItem>
           : <DropdownItem onClick={this.toggleAddGuild}>Create Guild</DropdownItem>}
+          
           <ManageGuildModal 
             key="manageGuildModal" 
             callback={this.closeManageGuildModal} 
@@ -215,7 +194,6 @@ class LoggedIn extends React.Component {
             guildServer={this.state.guildServer}
             guildFaction={this.state.guildFaction}
             guildRegion={this.state.guildRegion} />
-
           <AddGuildModal 
             key="addGuildModal"
             callback={this.closeAddGuildModal}
@@ -226,42 +204,20 @@ class LoggedIn extends React.Component {
           {this.state.userHasGuild 
           ? [<DropdownItem> Show Applicants</DropdownItem>, 
               <DropdownItem onClick={this.toggleDeleteGuildModal}>Delete Guild</DropdownItem>,
-              <Modal isOpen={this.state.deleteGuildModal} toggle={this.toggleDeleteGuildModal}>
-                <ModalBody>
-                  <span className="delete-font">
-                  Are you sure you want to permanently delete your guild? Doing so will delete the following:
-                    <ul className="no-dots">
-                      <li> - Guild</li>
-                      <li> - Guild Applications</li>
-                    </ul>
-                  </span>
-                </ModalBody>
-                <ModalFooter>
-                  <Button color="success" onClick={() => {this.deleteUserGuild(); this.toggleDeleteGuildModal()}}>Delete</Button>
-                  <Button color="danger" onClick={this.toggleDeleteGuildModal}>Nevermind</Button>
-                </ModalFooter>
-              </Modal>]
-          : <DropdownItem> Show Applications</DropdownItem>}
+              <DeleteGuildModal 
+                key="deleteGuildModal"
+                callback={this.closeDeleteGuildModal}
+                isModalShow={this.state.deleteGuildModal} />]
+          : <div></div>}
           <DropdownItem divider />
           <DropdownItem onClick={this.toggleDeleteProfileModal}>
             Delete Account
           </DropdownItem>
-          <Modal isOpen={this.state.deleteProfileModal} toggle={this.toggleDeleteProfileModal}>
-            <ModalBody>
-              <span className="delete-font">
-                Are you sure you want to permanently delete your account? Doing so will delete the following:
-                <ul className="no-dots">
-                  <li> - Guild (If applicable)</li>
-                  <li> - Guild applications (If applicable)</li>
-                  <li> - Profile</li>
-                </ul>
-              </span>
-            </ModalBody>
-            <ModalFooter>
-              <Button color="success" onClick={() => {this.deleteUserProfile(); this.toggleDeleteProfileModal()}}>Delete</Button>
-              <Button color="danger" onClick={this.toggleDeleteProfileModal}>Nevermind</Button>
-            </ModalFooter>
-          </Modal>
+          <DeleteProfileModal 
+            key="deleteProfileModal"
+            callback={this.closeDeleteProfileModal}
+            isModalShow={this.state.deleteProfileModal} />
+
           <DropdownItem onClick={this.logout}>
             Log Out
           </DropdownItem>

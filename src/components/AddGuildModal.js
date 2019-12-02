@@ -220,7 +220,23 @@ class AddGuildModal extends React.Component {
                 <DropdownToggle>
                   {this.state.guildServer ? this.state.guildServer : "Server"}
                 </DropdownToggle>
-                <DropdownMenu>
+                <DropdownMenu
+                  modifiers={{
+                    setMaxHeight: {
+                      enabled: true,
+                      order: 890,
+                      fn: (data) => {
+                        return {
+                          ...data,
+                          styles: {
+                            ...data.styles,
+                            overflow: 'auto',
+                            maxHeight: 175,
+                          },
+                        };
+                      },
+                    },
+                  }}>
                   {servers.map((serverDetail) => {
                     return <DropdownItem key={serverDetail.id} id={serverDetail.id} onClick={this.getServers}>{serverDetail.server}</DropdownItem>
                   })}
