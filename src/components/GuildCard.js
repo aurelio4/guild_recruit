@@ -1,6 +1,6 @@
 import React from 'react'
 import Fire from './Fire'
-import PublicProfileModal from './PublicProfileModal'
+import GuildMasterModal from './GuildMasterModal'
 import {
   Card,
   CardText,
@@ -97,10 +97,10 @@ class GuildCard extends React.Component {
               <CardSubtitle className="ras text-muted">{this.props.guildRegion}</CardSubtitle>
               <CardSubtitle className="ras text-muted">{this.props.guildServer}</CardSubtitle>
               <CardSubtitle className="gm-spacing">
-                <span className="text-muted">GM: </span>
-                <a id={this.props.id} href="#" onClick={() => {this.togglePublicProfile(); return false;}} className={this.props.gmStyle}>{this.props.guildMaster}</a>
+                <span className="text-muted">GM:</span>
+                <button id={this.props.id} href="#" onClick={() => {this.togglePublicProfile(); return false;}} className={this.props.gmStyle}>{this.props.guildMaster}</button>
               </CardSubtitle>
-              <PublicProfileModal key="ppModal" callback={this.closePublicProfileModal} isShow={this.state.publicProfileModal} />
+              <GuildMasterModal key="ppModal" callback={this.closePublicProfileModal} isShow={this.state.publicProfileModal} />
               <hr className="hr-divider" />
               <CardText>{this.props.guildDesc}</CardText>
               {this.state.userLoggedIn 

@@ -8,7 +8,7 @@ import {
   Input,
   Button } from 'reactstrap'
 
-class PublicProfileModal extends React.Component {
+class GuildMasterModal extends React.Component {
   constructor(props) {
     super(props)
 
@@ -49,4 +49,4 @@ class PublicProfileModal extends React.Component {
   }
 }
 
-export default PublicProfileModal
+export default GuildMasterModal
