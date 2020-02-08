@@ -4,7 +4,8 @@ import {
   Modal,
   ModalBody,
   ModalFooter,
-  Button } from 'reactstrap'
+  Button,
+  Input } from 'reactstrap'
 
 class DeleteGuildModal extends React.Component {
   constructor(props) {
@@ -12,14 +13,20 @@ class DeleteGuildModal extends React.Component {
 
     this.deleteUserGuild = this.deleteUserGuild.bind(this)
     this.getUser = this.getUser.bind(this)
+    this.handleChange = this.handleChange.bind(this)
 
     this.state = {
-      profileUid: ''
+      profileUid: '',
+      deleteGuild: ''
     }
   }
 
   componentDidMount() {
     this.getUser()
+  }
+
+  handleChange(e) {
+    this.setState({ [e.target.name]: e.target.value.toLowerCase() });
   }
 
   getUser() {
@@ -51,10 +58,12 @@ class DeleteGuildModal extends React.Component {
               <li> - Guild</li>
               <li> - Guild Applications</li>
             </ul>
+          Type delete if you wish to proceed
+          <Input type="delete" name="deleteGuild" value={this.state.deleteGuild} onChange={this.handleChange} />
           </span>
         </ModalBody>
         <ModalFooter>
-          <Button color="success" onClick={() => {this.deleteUserGuild(); this.props.callback(false)}}>Delete</Button>
+          <Button color="success" disabled={(this.state.deleteGuild === 'delete' ? false : true)} onClick={() => {this.deleteUserGuild(); this.props.callback(false)}}>Delete</Button>
           <Button color="danger" onClick={this.props.callback}>Nevermind</Button>
         </ModalFooter>
       </Modal>

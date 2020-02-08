@@ -26,7 +26,7 @@ class GuildMasterModal extends React.Component {
   render() {
     return (
       // values have to be filled with guild master
-      <Modal isOpen={this.props.isShow} toggle={this.togglePublicProfile}>
+      <Modal isOpen={this.props.isShow} toggle={this.sendData}>
         <ModalBody>
           <Form>
             <FormGroup>
